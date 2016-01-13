@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load cedict %}
+
+{% block content %}
+
+{% if search_query %}
+{% with phrases.count as n %}
+<div class="text-muted">Showing {{ n }} result{{ n|pluralize }}.</div>
+{% endwith %}
+{% endif %}
+
+<ul class="media-list">
+  {% for phrase in phrases %}
+  <li class="media">
+    <div class="media-body">
+
+      <h4 class="media-heading">
+        <a href="{% url 'cedict_phrase_tw' phrase.traditional %}">{{ phrase.traditional }}</a>
+      </h4>
+
+      {% if phrase.traditional != phrase.simplified %}
+      <div class="text-muted">[{{ phrase.simplified }}]</div>
+      {% endif %}
+
+      <div>
+        /{{ phrase.pinyin|pinyin_ascii_to_unicode }}/
+        {% url 'audio_view' phrase.pinyin as audio_url %}
+        <a href="{{ audio_url }}" onclick="return playAudio('{{ audio_url }}')"><span class="glyphicon glyphicon-volume-up"></span></a>
+      </div>
+
+      <ul>
+        {% for translation in phrase.translation_set.all %}
+        <li>{{ translation.translation|pinyin_ascii_to_unicode|urlize_chinese }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </li>
+  {% endfor %}
+</ul>
+
+{% endblock content %}
