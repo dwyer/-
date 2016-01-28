@@ -40,4 +40,21 @@
   {% endfor %}
 </ul>
 
+<ul class="pagination">
+  <li>
+    {% if page.has_previous %}
+    <a href="?q={{ search_query|urlencode }}&p={{ page.previous_page_number }}">Previous</a>
+    {% else %}
+    <a class="disabled">Previous</a>
+    {% endif %}
+  </li>
+  <li>
+    {% if page.has_next %}
+    <a href="?q={{ search_query|urlencode }}&p={{ page.next_page_number }}">Next</a>
+    {% else %}
+    <a class="disabled">Next</a>
+    {% endif %}
+  </li>
+</ul>
+
 {% endblock content %}

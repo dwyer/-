@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 
+from django.core.paginator import Paginator
 from django.core.urlresolvers import reverse
 from django.db.models import Q
 from django.http import Http404
@@ -7,10 +8,24 @@ from django.shortcuts import render
 
 from cedict.models import Phrase
 
+MAX_RESULTS = 20
 
-def index_view(request):
-    phrases = Phrase.objects.all()[:100]
-    context = {'phrases': phrases}
+
+def phrase_list(request):
+    search_query = request.GET.get('q', '')
+    page_number = int(request.GET.get('p', '1'))
+    phrases = (Phrase.objects.filter(Q(traditional__contains=search_query)
+                                     |Q(simplified__contains=search_query))
+               .extra(select={'__len': 'Length(traditional)'})
+               .order_by('__len'))
+    paginator = Paginator(phrases, MAX_RESULTS)
+    page = paginator.page(page_number)
+    phrases = page.object_list
+    context = {
+        'page': page,
+        'phrases': phrases,
+        'search_query': search_query,
+    }
     return render(request, 'phrase_list.html', context)
 
 
@@ -26,16 +41,4 @@ def phrase_view(request, traditional=None, simplified=None):
     context = {
         'phrases': phrases,
     }
-    return render(request, 'phrase_list.html', context)
-
-
-def search_view(request):
-    search_query = request.GET.get('q', '')
-    if not search_query:
-        return HttpResponseRedirect(reverse('cedict_index'))
-    phrases = (Phrase.objects.filter(Q(traditional__contains=search_query)
-                                     |Q(simplified__contains=search_query))
-               .extra(select={'__len': 'Length(traditional)'})
-               .order_by('__len'))
-    context = {'phrases': phrases, 'search_query': search_query}
     return render(request, 'phrase_list.html', context)
