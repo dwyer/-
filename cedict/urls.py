@@ -8,5 +8,5 @@ urlpatterns = [
         name='cedict_phrase_cn'),
     url(r'^phrases/tw/(?P<traditional>.+)/$', views.phrase_view,
         name='cedict_phrase_tw'),
-    url(r'^search/$', views.phrase_list, name='cedict_search'),
+    url(r'^search$', views.phrase_list, name='cedict_search'),
 ]
