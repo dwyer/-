@@ -8,6 +8,7 @@ _storage = get_storage_class()()
 
 
 def audio_view(request, phrase):
+    phrase = phrase.lower()
     phrase = phrase.replace('u:', 'v')
     phrase = ' '.join('er' if comp == 'r' else comp for comp in phrase.split())
     filename = 'audio_files/%s.mp4' % phrase
