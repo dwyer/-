@@ -127,7 +127,15 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
-MEDIA_ROOT = '.tmp/media'
+
+_tmp = os.path.join(BASE_DIR, '.tmp')
+STATIC_ROOT = os.path.join(_tmp, 'static')
+MEDIA_ROOT = os.path.join(_tmp, 'media')
+del _tmp
+
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
+)
 
 if not os.path.exists(MEDIA_ROOT):
     os.makedirs(MEDIA_ROOT)

@@ -1,3 +1,4 @@
+{% load staticfiles %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,7 +11,7 @@
     <div class="container-fluid">
 
       <div class="navbar-header">
-        <a class="navbar-brand" href="/">Yanjiu</a>
+        <a class="navbar-brand" href="{% url 'cedict_index' %}">Yanjiu</a>
       </div>
 
       <ul class="nav navbar-nav navbar-left">
@@ -53,7 +54,8 @@
     {% endblock content %}
     <div class="footer small text-muted">&copy; 2016 Casey Dwyer</div>
   </div>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+  <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script> -->
+  <script src="{% static 'cedict/js/cedict.js' %}"></script>
   <script>
       var playAudio = function (url) {
         var audio = new Audio(url);
