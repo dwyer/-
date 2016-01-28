@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 
+from django.core.urlresolvers import reverse
 from django.db.models import Q
 from django.http import Http404
 from django.shortcuts import render
@@ -30,6 +31,8 @@ def phrase_view(request, traditional=None, simplified=None):
 
 def search_view(request):
     search_query = request.GET.get('q', '')
+    if not search_query:
+        return HttpResponseRedirect(reverse('cedict_index'))
     phrases = (Phrase.objects.filter(Q(traditional__contains=search_query)
                                      |Q(simplified__contains=search_query))
                .extra(select={'__len': 'Length(traditional)'})
