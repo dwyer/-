@@ -1,28 +1,28 @@
-# -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
 import re
 import sys
 
-_SPECIAL_FINALS = ('a', 'e', 'ou')
-_REGEX = re.compile(r'([A-Za-z]+)([1-5])')
+_REGEX = re.compile(r'[A-Za-z:]+[1-5]')
 _MAP = {
-    u'a': (u'ā', u'á', u'ǎ', u'à'),
-    u'e': (u'ē', u'é', u'ě', u'è'),
-    u'i': (u'ī', u'í', u'ǐ', u'ì'),
-    u'o': (u'ō', u'ó', u'ǒ', u'ò'),
-    u'u': (u'ū', u'ú', u'ǔ', u'ù'),
-    u'ü': (u'ǖ', u'ǘ', u'ǚ', u'ǜ'),
+    'a': ('\u0101', '\xe1', '\u01ce', '\xe0'),
+    'e': ('\u0113', '\xe9', '\u011b', '\xe8'),
+    'i': ('\u012b', '\xed', '\u01d0', '\xec'),
+    'o': ('\u014d', '\xf3', '\u01d2', '\xf2'),
+    'u': ('\u016b', '\xfa', '\u01d4', '\xf9'),
+    '\xfc': ('\u01d6', '\u01d8', '\u01da', '\u01dc'),
 }
 
 
+# TODO: cache
 def _accent(alpha, tone, index=None):
     if tone == 5:
         return alpha
     if index is not None:
         return alpha[:index] + _MAP[alpha[index]][tone-1] + alpha[index+1:]
-    alpha = alpha.replace('v', u'ü')
-    for c in _SPECIAL_FINALS:
+    alpha = alpha.replace('u:', 'v')
+    alpha = alpha.replace('v', '\xfc')
+    for c in ('a', 'e', 'ou'):
         try:
             index = alpha.index(c)
         except ValueError:
@@ -35,11 +35,13 @@ def _accent(alpha, tone, index=None):
     raise ValueError
 
 
+# TODO: cache
 def ascii_to_unicode(phrase):
     components = []
     for syllable in phrase.split():
         match = _REGEX.match(syllable)
         if match is None:
             raise ValueError('Not a pinyin syllable: %r' % syllable)
-        components.append(_accent(match.group(1), int(match.group(2))))
+        match = match.group(0)
+        components.append(_accent(match[:-1], int(match[-1])))
     return ' '.join(components)

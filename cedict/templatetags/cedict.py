@@ -10,7 +10,6 @@ from django.utils.safestring import mark_safe
 from .. import pinyin
 
 _chinese_regex = re.compile(r'\|?\w*[\u4e00-\u9fff]+\w*', re.UNICODE)
-_pinyin_regex = re.compile(r'[A-Za-z]+[1-5]')
 register = template.Library()
 
 
@@ -25,7 +24,7 @@ def highlight(text, phrase):
 @register.filter
 @stringfilter
 def pinyin_ascii_to_unicode(text):
-    for match in frozenset(_pinyin_regex.findall(text)):
+    for match in frozenset(pinyin._REGEX.findall(text)):
         try:
             text = text.replace(match, pinyin.ascii_to_unicode(match))
         except ValueError:
