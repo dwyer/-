@@ -11,6 +11,10 @@ from cedict.models import Phrase
 MAX_RESULTS = 20
 
 
+def index(request):
+    return render(request, 'base.html', {})
+
+
 def phrase_list(request):
     search_query = request.GET.get('q', '')
     page_number = int(request.GET.get('p', '1'))
