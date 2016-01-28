@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 from django.core.paginator import Paginator
 from django.core.urlresolvers import reverse
 from django.db.models import Q
-from django.http import Http404
+from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import render
 
 from cedict.models import Phrase
@@ -46,3 +46,8 @@ def phrase_view(request, traditional=None, simplified=None):
         'phrases': phrases,
     }
     return render(request, 'phrase_list.html', context)
+
+
+def random_phrase(request):
+    phrase = Phrase.objects.order_by('?').first().traditional
+    return HttpResponseRedirect(reverse('cedict_phrase_tw', args=(phrase,)))

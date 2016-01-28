@@ -9,4 +9,5 @@ urlpatterns = [
     url(r'^phrases/tw/(?P<traditional>.+)/$', views.phrase_view,
         name='cedict_phrase_tw'),
     url(r'^search$', views.phrase_list, name='cedict_search'),
+    url(r'^random$', views.random_phrase, name='cedict_random'),
 ]
