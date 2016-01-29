@@ -3,8 +3,9 @@ from __future__ import unicode_literals
 from django.core.paginator import Paginator
 from django.core.urlresolvers import reverse
 from django.db.models import Q
-from django.http import Http404, HttpResponseRedirect
-from django.shortcuts import render
+from django.http import Http404, HttpResponseRedirect, JsonResponse
+from django.shortcuts import get_object_or_404, render
+from django.views.generic import View
 
 from cedict.models import Phrase
 
@@ -51,3 +52,17 @@ def phrase_view(request, traditional=None, simplified=None):
 def random_phrase(request):
     phrase = Phrase.objects.order_by('?').first().traditional
     return HttpResponseRedirect(reverse('cedict_phrase_tw', args=(phrase,)))
+
+
+class ApiPhrasesStar(View):
+    # TODO: require login
+
+    def post(self, request, phrase_id):
+        phrase = get_object_or_404(Phrase, pk=phrase_id)
+        request.user.profile.starred_phrases.add(phrase)
+        return JsonResponse({})
+
+    def delete(self, request, phrase_id):
+        phrase = get_object_or_404(Phrase, pk=phrase_id)
+        request.user.profile.starred_phrases.remove(phrase)
+        return JsonResponse({})

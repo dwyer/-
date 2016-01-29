@@ -16,6 +16,7 @@ urlpatterns = [
         name='cedict_phrase_tw'),
     url(r'^search$', cedict.views.phrase_list, name='cedict_search'),
     url(r'^random$', cedict.views.random_phrase, name='cedict_random'),
+    url(r'^api/phrases/(\d+)/star$', cedict.views.ApiPhrasesStar.as_view()),
     url(r'^audio/', include('audio.urls')),
 ]
 
