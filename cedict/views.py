@@ -19,10 +19,17 @@ def index(request):
 def phrase_list(request):
     search_query = request.GET.get('q', '')
     page_number = int(request.GET.get('p', '1'))
-    phrases = (Phrase.objects.filter(Q(traditional__contains=search_query)
-                                     |Q(simplified__contains=search_query))
-               .extra(select={'__len': 'Length(traditional)'})
-               .order_by('__len'))
+    terms = set(search_query.split())
+    if 'is:starred' in terms:
+        terms.remove('is:starred')
+        phrases = request.user.profile.starred_phrases.order_by('traditional')
+    else:
+        phrases = (Phrase.objects
+                   .extra(select={'__len': 'Length(traditional)'})
+                   .order_by('__len'))
+    for term in terms:
+        phrases = phrases.filter(Q(traditional__contains=term)
+                                 |Q(simplified__contains=term))
     paginator = Paginator(phrases, MAX_RESULTS)
     page = paginator.page(page_number)
     phrases = page.object_list
