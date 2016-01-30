@@ -19,12 +19,7 @@
         {% if phrase.traditional != phrase.simplified %}
         <span class="small text-muted">[{{ phrase.simplified }}]</span>
         {% endif %}
-
-        {% if phrase in user.profile.starred_phrases.all %}
-        <a onclick="unstarPhrase({{ phrase.id }});"><span class="glyphicon glyphicon-star"></span></a>
-        {% else %}
-        <a onclick="starPhrase({{ phrase.id }});"><span class="glyphicon glyphicon-star-empty"></span></a>
-        {% endif %}
+        <a class="glyphicon {% if phrase in user.profile.starred_phrases.all %}glyphicon-star{% else %}glyphicon-star-empty{% endif %}" onclick="toggleStar(this, {{ phrase.id }});"></a>
       </h4>
 
       <div>

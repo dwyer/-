@@ -1,29 +1,27 @@
 var googleApiKey = 'AIzaSyABxbqtLTNxu3q9XkVCRCpvDP2F7N_xtww';
 
-function starPhrase(phraseId) {
-  var url = '/api/phrases/' + phraseId + '/star';
-  fetch(url, {
-    method: 'post',
-    credentials: 'include',
-    headers: {
-      "X-CSRFToken": CSRF_TOKEN
-    }
-  }).catch(function(error) {
-    console.log('Error: :-S', error);
-  });
-}
-
-function unstarPhrase(phraseId) {
-  var url = '/api/phrases/' + phraseId + '/star';
-  fetch(url, {
-    method: 'delete',
-    credentials: 'include',
-    headers: {
-      "X-CSRFToken": CSRF_TOKEN
-    }
-  }).catch(function(error) {
-    console.log('Error: :-S', error);
-  });
+function toggleStar(elem, phraseId) {
+  var oldClassName = elem.className;
+  var method = null;
+  if (elem.className == 'glyphicon glyphicon-star') {
+    elem.className = 'glyphicon glyphicon-star-empty';
+    method = 'delete';
+  } else if (elem.className == 'glyphicon glyphicon-star-empty') {
+    elem.className = 'glyphicon glyphicon-star';
+    method = 'post';
+  }
+  if (method !== null) {
+    fetch('/api/phrases/' + phraseId + '/star', {
+      method: method,
+      credentials: 'include',
+      headers: {
+        "X-CSRFToken": CSRF_TOKEN
+      }
+    }).catch(function(error) {
+      elem.className = oldClassName;
+      console.log('Error: :-S', error);
+    });
+  }
 }
 
 function googleTranslate(id, phrase, source, target) {
