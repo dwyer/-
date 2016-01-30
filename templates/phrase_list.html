@@ -46,6 +46,7 @@
   {% endfor %}
 </ul>
 
+{% if page %}
 <ul class="pagination">
   <li>
     {% if page.has_previous %}
@@ -62,5 +63,6 @@
     {% endif %}
   </li>
 </ul>
+{% endif %}
 
 {% endblock content %}
