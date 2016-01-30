@@ -4,8 +4,8 @@
 {% block content %}
 
 {% if search_query %}
-{% with phrases.count as n %}
-<div class="text-muted">Showing {{ n }} result{{ n|pluralize }}.</div>
+{% with page.paginator.count as n %}
+<div class="alert {% if n %}alert-success{% else %}alert-danger{% endif %}">Showing {{ page.object_list.count }} of {{ n }} result{{ n|pluralize }}.</div>
 {% endwith %}
 {% endif %}
 
