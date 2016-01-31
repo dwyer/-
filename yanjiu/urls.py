@@ -14,8 +14,13 @@ urlpatterns = [
         name='cedict_phrase_cn'),
     url(r'^phrases/tw/(?P<traditional>.+)/$', cedict.views.phrase_view,
         name='cedict_phrase_tw'),
+    url(r'^texts/$', cedict.views.TextList.as_view(), name='text_list'),
+    url(r'^texts/(\d+)/$', cedict.views.TextDetail.as_view(), name='text_detail'),
+    url(r'^texts/(\d+)/edit/$', cedict.views.TextEdit.as_view(), name='text_edit'),
+    url(r'^texts/new/$', cedict.views.TextEdit.as_view(), name='text_create'),
     url(r'^search$', cedict.views.phrase_list, name='cedict_search'),
     url(r'^random$', cedict.views.random_phrase, name='cedict_random'),
+    url(r'^api/phrases/(.+)$', cedict.views.ApiPhrase.as_view()),
     url(r'^api/phrases/(\d+)/star$', cedict.views.ApiPhrasesStar.as_view()),
     url(r'^audio/', include('audio.urls')),
 ]

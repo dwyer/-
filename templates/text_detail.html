@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+<header>
+  <h1>{{ text.title }}</h1>
+  <nav class="nav">
+    <ul>
+      <li><a href="{% url 'text_edit' text.pk %}">Edit</a></li>
+      {% if text.video_url %}
+      <li><a href="{{ text.video_url }}">Video</a></li>
+      {% endif %}
+    </ul>
+  </nav>
+</header>
+<div style="font-size: 14pt;">
+  {{ text.text|linebreaks }}
+</div>
+{% endblock content %}
+
+{% block end %}
+<script>document.onmouseup = textSelectListener;</script>
+{% endblock end %}

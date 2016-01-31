@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 
+from django.core.exceptions import PermissionDenied
 from django.core.paginator import Paginator
 from django.core.urlresolvers import reverse
 from django.db.models import Q
@@ -7,7 +8,8 @@ from django.http import Http404, HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.views.generic import View
 
-from cedict.models import Phrase
+from cedict.models import Phrase, Text
+from cedict.forms import TextForm
 
 MAX_RESULTS = 20
 
@@ -61,14 +63,77 @@ def random_phrase(request):
     return HttpResponseRedirect(reverse('cedict_phrase_tw', args=(phrase,)))
 
 
-class ApiPhrasesStar(View):
-    # TODO: require login
+class TextList(View):
 
+    def get(self, request):
+        texts = Text.objects.all()
+        # TODO: paginate
+        context = {
+            'texts': texts,
+        }
+        return render(request, 'text_list.html', context)
+
+
+class TextDetail(View):
+
+    def get(self, request, pk):
+        text = get_object_or_404(Text, pk=pk)
+        context = {'text': text}
+        return render(request, 'text_detail.html', context)
+
+
+class TextEdit(View):
+
+    def get_text(self, request, pk):
+        if pk is None:
+            return None
+        text = get_object_or_404(Text, pk=pk)
+        if text.owner != request.user:
+            raise PermissionDenied
+        return text
+
+    def get(self, request, pk=None):
+        text = self.get_text(request, pk)
+        form = TextForm(instance=text)
+        return render(request, 'text_edit.html', {'form': form})
+
+    def post(self, request, pk=None):
+        text = self.get_text(request, pk)
+        form = TextForm(request.POST, instance=text)
+        if not form.is_valid():
+            return render(request, 'text_edit.html', {'form': form})
+        text = form.save(commit=False)
+        text.owner = request.user
+        text.save()
+        return HttpResponseRedirect(reverse('text_detail', args=(text.pk,)))
+
+
+class ApiPhrase(View):
+
+    def get(self, request, phrase):
+        lst = []
+        for phrase in Phrase.objects.filter(traditional=phrase):
+            obj = {
+                'traditional': phrase.traditional,
+                'simplified': phrase.simplified,
+                'pinyin': phrase.pinyin,
+                'translations': [],
+            }
+            for translation in phrase.translation_set.all():
+                obj['translations'].append(translation.translation)
+            lst.append(obj)
+        return JsonResponse({'phrases': lst})
+
+
+class ApiPhrasesStar(View):
+
+    # TODO: require login
     def post(self, request, phrase_id):
         phrase = get_object_or_404(Phrase, pk=phrase_id)
         request.user.profile.starred_phrases.add(phrase)
         return JsonResponse({})
 
+    # TODO: require login
     def delete(self, request, phrase_id):
         phrase = get_object_or_404(Phrase, pk=phrase_id)
         request.user.profile.starred_phrases.remove(phrase)

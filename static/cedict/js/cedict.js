@@ -43,3 +43,26 @@ function googleTranslate(id, phrase, source, target) {
     console.log('Error: :-S', error);
   });
 }
+
+function textSelectListener(event) {
+  var selection = document.getSelection();
+  var string = selection.toString();
+  if (string.length > 0) {
+    fetch('/api/phrases/' + string).then(function(response) {
+      if (response.status == 200) {
+        response.json().then(function (data) {
+          for (var i in data.phrases) {
+            console.log('T: ' + data.phrases[i].traditional);
+            console.log('S: ' + data.phrases[i].simplified);
+            console.log('P: ' + data.phrases[i].pinyin);
+            for (var j in data.phrases[i].translations) {
+              console.log('- ' + data.phrases[i].translations[j]);
+            }
+          }
+        });
+      }
+    }).catch(function(error) {
+      console.log('Error: :-S', error);
+    });
+  }
+}
