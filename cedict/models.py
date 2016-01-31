@@ -22,13 +22,6 @@ class Profile(models.Model):
     starred_phrases = models.ManyToManyField(Phrase)
 
 
-class Text(models.Model):
-    title = models.CharField(max_length=255, blank=False)
-    text = models.TextField(blank=True)
-    video_url = models.URLField(blank=True)
-    owner = models.ForeignKey(User, null=False)
-
-
 @receiver(post_save, sender=User, dispatch_uid='user_post_save')
 def user_post_save(sender, instance, **kwargs):
     Profile.objects.get_or_create(user=instance)

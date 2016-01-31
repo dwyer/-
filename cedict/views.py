@@ -1,15 +1,13 @@
 from __future__ import unicode_literals
 
-from django.core.exceptions import PermissionDenied
 from django.core.paginator import Paginator
 from django.core.urlresolvers import reverse
 from django.db.models import Q
 from django.http import Http404, HttpResponseRedirect
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import render
 from django.views.generic import View
 
-from cedict.models import Phrase, Text
-from cedict.forms import TextForm
+from cedict.models import Phrase
 
 MAX_RESULTS = 20
 
@@ -61,48 +59,3 @@ def phrase_view(request, traditional=None, simplified=None):
 def random_phrase(request):
     phrase = Phrase.objects.order_by('?').first().traditional
     return HttpResponseRedirect(reverse('cedict_phrase_tw', args=(phrase,)))
-
-
-class TextList(View):
-
-    def get(self, request):
-        texts = Text.objects.all()
-        # TODO: paginate
-        context = {
-            'texts': texts,
-        }
-        return render(request, 'text_list.html', context)
-
-
-class TextDetail(View):
-
-    def get(self, request, pk):
-        text = get_object_or_404(Text, pk=pk)
-        context = {'text': text}
-        return render(request, 'text_detail.html', context)
-
-
-class TextEdit(View):
-
-    def get_text(self, request, pk):
-        if pk is None:
-            return None
-        text = get_object_or_404(Text, pk=pk)
-        if text.owner != request.user:
-            raise PermissionDenied
-        return text
-
-    def get(self, request, pk=None):
-        text = self.get_text(request, pk)
-        form = TextForm(instance=text)
-        return render(request, 'text_edit.html', {'form': form})
-
-    def post(self, request, pk=None):
-        text = self.get_text(request, pk)
-        form = TextForm(request.POST, instance=text)
-        if not form.is_valid():
-            return render(request, 'text_edit.html', {'form': form})
-        text = form.save(commit=False)
-        text.owner = request.user
-        text.save()
-        return HttpResponseRedirect(reverse('text_detail', args=(text.pk,)))
