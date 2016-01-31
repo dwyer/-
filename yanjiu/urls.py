@@ -20,8 +20,7 @@ urlpatterns = [
     url(r'^texts/new/$', cedict.views.TextEdit.as_view(), name='text_create'),
     url(r'^search$', cedict.views.phrase_list, name='cedict_search'),
     url(r'^random$', cedict.views.random_phrase, name='cedict_random'),
-    url(r'^api/phrases/(.+)$', cedict.views.ApiPhrase.as_view()),
-    url(r'^api/phrases/(\d+)/star$', cedict.views.ApiPhrasesStar.as_view()),
+    url(r'^api/v1/', include('api.urls')),
     url(r'^audio/', include('audio.urls')),
 ]
 

@@ -11,7 +11,7 @@ function toggleStar(elem, phraseId) {
     method = 'post';
   }
   if (method !== null) {
-    fetch('/api/phrases/' + phraseId + '/star', {
+    fetch('/api/v1/phrases/' + phraseId + '/star', {
       method: method,
       credentials: 'include',
       headers: {
@@ -48,7 +48,7 @@ function textSelectListener(event) {
   var selection = document.getSelection();
   var string = selection.toString();
   if (string.length > 0) {
-    fetch('/api/phrases/' + string).then(function(response) {
+    fetch('/api/v1/phrases/' + string).then(function(response) {
       if (response.status == 200) {
         response.json().then(function (data) {
           for (var i in data.phrases) {
