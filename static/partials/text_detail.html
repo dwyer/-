@@ -1,0 +1,19 @@
+<div class="col-sm-6">
+  <h1>{{text.title}}</h1>
+  <ul>
+    <li ng-show="text.video_url">Video: <a href="{{text.video_url}}" target="_yt">{{text.video_url}}</a></li>
+    <li ng-show="isWritable"><a href="#/texts/{{text.id}}/edit">Edit</a></li>
+  </ul>
+  <div style="font-size: larger; white-space: pre-line;" ng-mouseup="listener()">{{text.text}}</div>
+</div>
+
+<div class="col-sm-6" data-spy="affix" data-offset="20" style="right: 0;">
+  <section ng-show="selection">
+    <h2>{{selection}}</h2>
+    <div><a href="https://translate.google.com/#zh-CN/en/{{selection}}" target="_gt">Google Translate</a></div>
+    <section ng-if="phrases && phrases.length">
+      <h3>Dictionary</h3>
+      <div ng-include="phraseListPartialUrl"></div>
+    </section>
+  </section>
+</div>

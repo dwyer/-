@@ -1,0 +1,22 @@
+<form novalidate>
+
+  <div class="form-group">
+    <label for="title">Title</label>
+    <input id="title" class="form-control" type="text" ng-model="text.title">
+  </div>
+
+  <div class="form-group">
+    <label for="video_url">Video URL</label>
+    <input id="video_url" class="form-control" type="url" ng-model="text.video_url">
+  </div>
+
+  <div class="form-group">
+    <label for="text">Text</label>
+    <textarea id="text" class="form-control" rows=20 ng-model="text.text"></textarea>
+  </div>
+
+  <div class="form-group">
+    <button class="btn btn-default" ng-click="submit()">Submit</button>
+  </div>
+
+</form>

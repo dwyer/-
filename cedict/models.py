@@ -5,11 +5,21 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
+from . import pinyin
+
 
 class Phrase(models.Model):
     traditional = models.CharField(max_length=255, blank=False)
     simplified = models.CharField(max_length=255, blank=False)
     pinyin = models.CharField(max_length=255, blank=False)
+
+    @property
+    def pinyin_unicode(self):
+        return pinyin.ascii_to_unicode(self.pinyin)
+
+    @property
+    def zhuyin(self):
+        return pinyin.zhuyin(self.pinyin)
 
 
 class Translation(models.Model):

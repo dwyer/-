@@ -18,7 +18,8 @@ class PhraseSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Phrase
-        fields = ('id', 'traditional', 'simplified', 'pinyin', 'translations')
+        fields = ('id', 'traditional', 'simplified', 'pinyin',
+                  'pinyin_unicode', 'zhuyin', 'translations')
 
 
 class TextSerializer(serializers.HyperlinkedModelSerializer):

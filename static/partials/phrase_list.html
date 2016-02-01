@@ -1,0 +1,18 @@
+<ul class="media-list" ng-repeat="phrase in phrases">
+  <li class="media">
+    <div class="media-body">
+      <h4 class="media-heading">
+        {{phrase.traditional}}
+        <span class="text-muted" ng-if="phrase.traditional != phrase.simplified">[{{phrase.simplified}}]</span>
+      </h4>
+      <div>
+        /{{phrase.pinyin_unicode}}/
+        <a class="glyphicon glyphicon-volume-up" ng-click="playAudio(phrase.pinyin)"></a>
+      </div>
+      <div>/{{phrase.zhuyin}}/</div>
+      <ul ng-repeat="translation in phrase.translations">
+        <li>{{translation.translation}}</li>
+      </ul>
+    </div>
+  </li>
+</ul>
