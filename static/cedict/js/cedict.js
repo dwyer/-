@@ -48,15 +48,16 @@ function textSelectListener(event) {
   var selection = document.getSelection();
   var string = selection.toString();
   if (string.length > 0) {
-    fetch('/api/v1/phrases/' + string).then(function(response) {
+    fetch('/api/v1/phrases?traditional=' + encodeURIComponent(string)).then(function(response) {
       if (response.status == 200) {
         response.json().then(function (data) {
-          for (var i in data.phrases) {
-            console.log('T: ' + data.phrases[i].traditional);
-            console.log('S: ' + data.phrases[i].simplified);
-            console.log('P: ' + data.phrases[i].pinyin);
-            for (var j in data.phrases[i].translations) {
-              console.log('- ' + data.phrases[i].translations[j]);
+          for (var i in data.results) {
+            var result = data.results[i];
+            console.log('T: ' + result.traditional);
+            console.log('S: ' + result.simplified);
+            console.log('P: ' + result.pinyin);
+            for (var j in result.translations) {
+              console.log('- ' + result.translations[j].translation);
             }
           }
         });

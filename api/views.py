@@ -1,28 +1,49 @@
+from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.views.generic import View
 
-from cedict.models import Phrase
+from rest_framework import generics, pagination, viewsets
+
+from cedict.models import Phrase, Translation
+from texts.models import Text
+
+from . import serializers
+from . import permissions
 
 
-class ApiPhrase(View):
+class PhraseViewSet(viewsets.ModelViewSet):
+    queryset = Phrase.objects.all()
+    serializer_class = serializers.PhraseSerializer
+    permission_classes = (permissions.ReadOnly,)
 
-    def get(self, request, phrase):
-        lst = []
-        for phrase in Phrase.objects.filter(traditional=phrase):
-            obj = {
-                'traditional': phrase.traditional,
-                'simplified': phrase.simplified,
-                'pinyin': phrase.pinyin,
-                'translations': [],
-            }
-            for translation in phrase.translation_set.all():
-                obj['translations'].append(translation.translation)
-            lst.append(obj)
-        return JsonResponse({'phrases': lst})
+    def get_queryset(self):
+        queryset = self.queryset
+        traditional = self.request.query_params.get('traditional')
+        if traditional is not None:
+            queryset = queryset.filter(traditional=traditional)
+        return queryset
 
 
-class ApiPhrasesStar(View):
+class TranslationViewSet(viewsets.ModelViewSet):
+    queryset = Translation.objects.all()
+    serializer_class = serializers.TranslationSerializer
+    permission_classes = (permissions.IsOwnerOrReadOnly,)
+
+
+class TextViewSet(viewsets.ModelViewSet):
+    queryset = Text.objects.all()
+    serializer_class = serializers.TextSerializer
+    permission_classes = (permissions.IsOwnerOrReadOnly,)
+
+
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = serializers.UserSerializer
+    permission_classes = (permissions.IsOwnerOrReadOnly,)
+
+
+class PhrasesStar(View):
 
     # TODO: require login
     def post(self, request, phrase_id):
