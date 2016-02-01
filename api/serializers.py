@@ -6,14 +6,28 @@ from cedict.models import Phrase, Translation
 from texts.models import Text
 
 
-class TranslationSerializer(serializers.HyperlinkedModelSerializer):
+class _BaseSerializer(serializers.HyperlinkedModelSerializer):
+
+    def __init__(self, *args, **kwargs):
+        super(_BaseSerializer, self).__init__(*args, **kwargs)
+        if 'request' in self.context:
+            fields = self.context['request'].query_params.get('fields')
+            if fields:
+                fields = fields.split(',')
+                allowed = set(fields)
+                existing = set(self.fields.keys())
+                for field in existing - allowed:
+                    self.fields.pop(field)
+
+
+class TranslationSerializer(_BaseSerializer):
 
     class Meta:
         model = Translation
         fields = ('id', 'translation')
 
 
-class PhraseSerializer(serializers.HyperlinkedModelSerializer):
+class PhraseSerializer(_BaseSerializer):
     translations = TranslationSerializer(source='translation_set', many=True)
 
     class Meta:
@@ -22,7 +36,7 @@ class PhraseSerializer(serializers.HyperlinkedModelSerializer):
                   'pinyin_unicode', 'zhuyin', 'translations')
 
 
-class TextSerializer(serializers.HyperlinkedModelSerializer):
+class TextSerializer(_BaseSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')
 
     class Meta:
@@ -30,7 +44,7 @@ class TextSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('id', 'title', 'text', 'video_url', 'owner')
 
 
-class UserSerializer(serializers.HyperlinkedModelSerializer):
+class UserSerializer(_BaseSerializer):
 
     class Meta:
         model = User
