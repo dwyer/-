@@ -82,7 +82,7 @@
   app.controller('TextListCtrl', ['$scope', '$http', function ($scope, $http) {
     $http({
       method: 'GET',
-      url: '/api/v1/texts?fields=id,title'//,
+      url: '/api/v1/texts?fields=id,title,video_url'//,
     }).then(function (response) {
       $scope.texts = response.data.results;
     });
