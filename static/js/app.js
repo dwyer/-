@@ -20,6 +20,10 @@
       templateUrl: PARTIALS_DIR + 'text_list.html',
       controller: 'TextListCtrl'//,
     })
+    .when('/texts/create', {
+      templateUrl: PARTIALS_DIR + 'text_edit.html',
+      controller: 'TextCreateCtrl'//,
+    })
     .when('/texts/:id', {
       templateUrl: PARTIALS_DIR + 'text_detail.html',
       controller: 'TextDetailCtrl'//,
@@ -136,17 +140,37 @@
         $scope.finish = function () {
           window.history.back();
         };
-        $scope.submit = function () {
-          if ($scope.text) {
-            $http({
-              method: 'PUT',
-              url: API_BASE_URL + 'texts/' + id,
-              data: $scope.text//,
-            }).then(function (response) {
+        $scope.submit = function (isValid) {
+          if (isValid) {
+            $http.put(API_BASE_URL + 'texts/' + id, data)
+            .then(function (response) {
               $scope.finish();
+            }, function (response) {
+              $scope.error = response.data;
             });
           }
         };
       }]);
+
+
+    app.controller('TextCreateCtrl', [
+      '$scope', '$http', '$routeParams',
+      function ($scope, $http, $routeParams) {
+        $scope.text = {};
+        $scope.finish = function () {
+          window.history.back();
+        };
+        $scope.submit = function (isValid) {
+          if (isValid) {
+            $http.post(API_BASE_URL + 'texts', $scope.text)
+            .then(function (response) {
+              window.location.href = '#/texts/' + response.data.id;
+            }, function (response) {
+              $scope.error = response.data;
+            });
+          }
+        };
+      }]);
+
 
 })();
