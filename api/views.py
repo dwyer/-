@@ -36,6 +36,8 @@ class TextViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.TextSerializer
     permission_classes = (permissions.IsOwnerOrReadOnly,)
 
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()

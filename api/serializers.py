@@ -44,7 +44,7 @@ class PhraseSerializer(_BaseSerializer):
 
 
 class TextSerializer(_BaseSerializer):
-    owner = UserSerializer()
+    owner = UserSerializer(read_only=True)
 
     class Meta:
         model = Text
