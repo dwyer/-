@@ -20,6 +20,13 @@ class _BaseSerializer(serializers.HyperlinkedModelSerializer):
                     self.fields.pop(field)
 
 
+class UserSerializer(_BaseSerializer):
+
+    class Meta:
+        model = User
+        fields = ('id', 'username')
+
+
 class TranslationSerializer(_BaseSerializer):
 
     class Meta:
@@ -37,16 +44,9 @@ class PhraseSerializer(_BaseSerializer):
 
 
 class TextSerializer(_BaseSerializer):
-    owner = serializers.ReadOnlyField(source='owner.username')
+    owner = UserSerializer()
 
     class Meta:
         model = Text
         fields = ('id', 'title', 'text', 'video_url', 'owner',
                   'processed_text')
-
-
-class UserSerializer(_BaseSerializer):
-
-    class Meta:
-        model = User
-        fields = ('id', 'username', 'email')

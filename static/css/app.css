@@ -1,0 +1,12 @@
+.zh-text {
+  font-size: 150%;
+  white-space: pre-line;
+}
+
+.zh-sent {
+  /* border-bottom: 1px dotted black; */
+}
+
+.zh-word {
+  border: 1px dotted black;
+}

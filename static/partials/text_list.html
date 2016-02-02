@@ -1,3 +1,9 @@
-<ul ng-repeat="text in texts">
-  <li><a href="#/texts/{{ text.id }}">{{ text.title }}</a></li>
+<ul class="media-list" ng-repeat="text in texts">
+  <li class="media-item">
+    <div class="media-body">
+      <h4 class="media-header">
+        <a href="#/texts/{{ text.id }}">{{ text.title }}</a>
+      </h4>
+    </div>
+  </li>
 </ul>

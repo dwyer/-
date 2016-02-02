@@ -5,11 +5,11 @@
   <meta charset="UTF-8">
   <title>{% block title %}Yanjiu{% endblock title %}</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+  <link rel="stylesheet" href="{% static 'css/app.css' %}">
   <script>
     var CSRF_TOKEN = '{{ csrf_token }}';
     var PARTIALS_DIR = "{% static 'partials/' %}";
     var USER_ID = {{ user.id }};
-    var USER_USERNAME = "{{ user.username }}";
     var API_BASE_URL = '/api/v1/';
   </script>
 </head>
@@ -67,13 +67,14 @@
     {% endblock content %}
     <footer class="footer small text-muted">&copy; 2016 Casey Dwyer</footer>
   </div>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
-  <script src="{% static 'audio/js/audio.js' %}"></script>
-  <script src="{% static 'cedict/js/cedict.js' %}"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular-route.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular-sanitize.min.js"></script>
+  <script src="{% static 'audio/js/audio.js' %}"></script>
+  <script src="{% static 'cedict/js/cedict.js' %}"></script>
   <script src="{% static 'js/app.js' %}"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/angular-strap/2.3.7/angular-strap.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/angular-strap/2.3.7/angular-strap.tpl.min.js"></script>
   {% block end %}
   {% endblock end %}
 </body>
