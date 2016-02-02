@@ -41,7 +41,8 @@ class TextSerializer(_BaseSerializer):
 
     class Meta:
         model = Text
-        fields = ('id', 'title', 'text', 'video_url', 'owner')
+        fields = ('id', 'title', 'text', 'video_url', 'owner',
+                  'processed_text')
 
 
 class UserSerializer(_BaseSerializer):
