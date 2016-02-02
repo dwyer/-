@@ -1,6 +1,7 @@
 <div class="col-sm-6">
   <h1>{{text.title}}</h1>
   <ul>
+    <li ng-show="text.owner">Shared by <strong>{{text.owner.username}}</strong>.</li>
     <li ng-show="text.video_url">Video: <a href="{{text.video_url}}" target="_yt">{{text.video_url}}</a></li>
     <li ng-show="isWritable"><a href="#/texts/{{text.id}}/edit">Edit</a></li>
   </ul>
@@ -8,14 +9,12 @@
 </div>
 
 <div class="col-sm-6">
-  <div data-spy="affix" data-offset-top="70" bs-affix>
-    <section ng-show="selection">
-      <h2>{{selection}}</h2>
-      <div><a href="https://translate.google.com/#zh-CN/en/{{selection}}" target="_gt">Google Translate</a></div>
-      <section ng-if="phrases && phrases.length">
-        <h3>Dictionary</h3>
-        <div ng-include="phraseListPartialUrl"></div>
-      </section>
-    </section>
+  <div data-spy="affix" data-offset-top="70" ng-show="selection" bs-affix>
+    <h2>{{selection}}</h2>
+    <div><a href="https://translate.google.com/#zh-CN/en/{{selection}}" target="_gt">Google Translate</a></div>
+    <div ng-if="phrases && phrases.length">
+      <h3>Dictionary</h3>
+      <div ng-include="phraseListPartialUrl"></div>
+    </div>
   </div>
 </div>
