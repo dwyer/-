@@ -143,7 +143,7 @@
         };
         $scope.submit = function (isValid) {
           if (isValid) {
-            $http.put(API_BASE_URL + 'texts/' + id, data)
+            $http.put(API_BASE_URL + 'texts/' + id, $scope.text)
             .then(function (response) {
               $scope.finish();
             }, function (response) {
