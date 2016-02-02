@@ -107,12 +107,13 @@
         audio.play();
       };
       $scope.listener = function () {
+        var oldSelection = $scope.selection;
         if (window.getSelection) {
           $scope.selection = window.getSelection().toString();
         } else {
           $scope.selection = document.selection.createRange().text;
         }
-        if ($scope.selection.length > 0) {
+        if ($scope.selection.length > 0 && $scope.selection !== oldSelection) {
           $http({
             method: 'GET',
             url: '/api/v1/phrases?traditional=' + encodeURIComponent($scope.selection)
