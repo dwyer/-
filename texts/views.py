@@ -1,6 +1,6 @@
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.views.generic import View
 
@@ -51,3 +51,10 @@ class TextEdit(View):
         text.owner = request.user
         text.save()
         return HttpResponseRedirect(reverse('text_detail', args=(text.pk,)))
+
+
+class TextFormView(View):
+
+    def get(self, request):
+        form = TextForm('textForm', self.request.GET.get('model_name', 'text'))
+        return HttpResponse(str(form))

@@ -1,26 +1,14 @@
-<div class="alert alert-danger" ng-if="error">{{error}}</div>
+<div class="alert alert-danger" ng-repeat="(key, value) in error">
+  <strong>{{key}}:</strong>
+  <span ng-repeat="message in value"> {{message}}</span>
+</div>
 
 <form name="textForm" novalidate>
 
-  <div class="form-group" ng-class="{'has-error': textForm.title.$invalid}">
-    <label class="control-label" for="title">Title</label>
-    <input id="title" class="form-control" name="title" type="text" required ng-maxlength="255" ng-model="text.title">
-    <p class="help-block" ng-show="textForm.title.$invalid">Title is required</p>
-  </div>
-
-  <div class="form-group" ng-class="{'has-error': textForm.video_url.$invalid}">
-    <label class="control-label" for="video_url">Video URL</label>
-    <input id="video_url" class="form-control" type="url" name="video_url" ng-model="text.video_url">
-    <p class="help-block" ng-show="textForm.video_url.$invalid">Must be a valid URL.</p>
-  </div>
+  <ng-include src="'/texts/form'"></ng-include>
 
   <div class="form-group">
-    <label class="control-label" for="text">Text</label>
-    <textarea id="text" class="form-control" rows=20 ng-model="text.text"></textarea>
-  </div>
-
-  <div class="form-group">
-    <button class="btn btn-default" ng-click="submit(textForm.$valid)" ng-disabled="textForm.$invalid">Submit</button>
+    <button class="btn btn-primary" ng-click="submit(textForm.$valid)" ng-disabled="textForm.$invalid">Submit</button>
     <button class="btn btn-default" ng-click="finish()">Cancel</button>
   </div>
 

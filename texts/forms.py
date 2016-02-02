@@ -1,8 +1,9 @@
-from django.forms import ModelForm
+from yanjiu import forms
 
 from .models import Text
 
-class TextForm(ModelForm):
+
+class TextForm(forms.BsNgModelForm):
 
     class Meta:
         model = Text
