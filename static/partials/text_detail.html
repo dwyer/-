@@ -1,9 +1,17 @@
 <div class="col-sm-6">
   <h1>{{text.title}}</h1>
   <ul>
-    <li ng-show="text.owner">Shared by <strong>{{text.owner.username}}</strong>.</li>
-    <li ng-show="text.video_url">Video: <a href="{{text.video_url}}" target="_yt">{{text.video_url}}</a></li>
-    <li ng-show="isWritable"><a href="#/texts/{{text.id}}/edit">Edit</a></li>
+    <li ng-show="text.owner">
+      <span class="glyphicon glyphicon-user"></span>
+      <span>Created by <strong>{{text.owner.username}}</strong></span>
+    </li>
+    <li ng-show="text.video_url">
+      <span class="glyphicon glyphicon-facetime-video"></span>
+      <a href="{{text.video_url}}" target="_blank">Video</a></li>
+    <li ng-show="isWritable">
+      <span class="glyphicon glyphicon-edit"></span>
+      <a href="#/texts/{{text.id}}/edit">Edit</a>
+    </li>
   </ul>
   <div class="zh-text" ng-bind-html="text.processed_text" ng-mouseup="listener()"></div>
 </div>
