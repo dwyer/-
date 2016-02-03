@@ -80,10 +80,8 @@
 
 
   app.controller('TextListCtrl', ['$scope', '$http', function ($scope, $http) {
-    $http({
-      method: 'GET',
-      url: '/api/v1/texts?fields=id,title,video_url'//,
-    }).then(function (response) {
+    $http.get('/api/v1/texts?fields=id,title,video_url')
+    .then(function (response) {
       $scope.texts = response.data.results;
     });
   }]);
@@ -92,10 +90,8 @@
   app.controller('TextDetailCtrl', [
     '$scope', '$http', '$routeParams',
     function ($scope, $http, $routeParams) {
-      $http({
-        method: 'GET',
-        url: '/api/v1/texts/' + $routeParams.id//,
-      }).then(function (response) {
+      $http.get('/api/v1/texts/' + $routeParams.id)
+      .then(function (response) {
         $scope.text = response.data;
         $scope.isWritable = $scope.text.owner.id == USER_ID;
       });
@@ -114,10 +110,8 @@
           $scope.selection = document.selection.createRange().text;
         }
         if ($scope.selection.length > 0 && $scope.selection !== oldSelection) {
-          $http({
-            method: 'GET',
-            url: '/api/v1/phrases?traditional=' + encodeURIComponent($scope.selection)
-          }).then(function (response) {
+          $http.get('/api/v1/phrases?traditional=' + encodeURIComponent($scope.selection))
+          .then(function (response) {
             $scope.phrases = response.data.results;
           });
         }
@@ -129,10 +123,8 @@
       '$scope', '$http', '$routeParams',
       function ($scope, $http, $routeParams) {
         var id = $routeParams.id;
-        $http({
-          method: 'GET',
-          url: API_BASE_URL + 'texts/' + id//,
-        }).then(function (response) {
+        $http.get(API_BASE_URL + 'texts/' + id)
+        .then(function (response) {
           $scope.text = response.data;
           if ($scope.text.owner.id != USER_ID) {
             // TODO: raise error
@@ -172,6 +164,5 @@
           }
         };
       }]);
-
 
 })();
