@@ -10,7 +10,7 @@ _ZH_SENT_REGEX = re.compile(r'[\u4e00-\u9fa5]+')
 _CACHE_PREFIX = 'get_words:phrase:'
 
 
-def get_words(sentence):
+def _get_words(sentence):
     words = []
     while sentence:
         done = False
@@ -37,7 +37,7 @@ def get_words(sentence):
     return words
 
 
-def get_sentences(text):
+def _get_sentences(text):
     fragments = []
     while text:
         match = _ZH_SENT_REGEX.search(text)
@@ -49,7 +49,11 @@ def get_sentences(text):
         if index:
             fragments.append(text[:index])
         fragments.append('<span class="zh-sent">')
-        fragments.extend(get_words(sentence))
+        fragments.extend(_get_words(sentence))
         fragments.append('</span>')
         text = text[index + len(sentence):]
     return fragments
+
+
+def process_text(self):
+    return ''.join(_get_sentences(self.text))

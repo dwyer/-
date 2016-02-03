@@ -1,9 +1,11 @@
 from __future__ import unicode_literals
 
+import logging as logger
+
 from django.contrib.auth.models import User
 from django.db import models
 
-from .utils import get_sentences
+from .utils import process_text
 
 
 class Text(models.Model):
@@ -14,4 +16,8 @@ class Text(models.Model):
 
     @property
     def processed_text(self):
-        return ''.join(get_sentences(self.text))
+        import time
+        t = time.time()
+        s = process_text(self.text)
+        print 'finished processed_text in %gs' % (time.time() - t)
+        return s
