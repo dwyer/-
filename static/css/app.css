@@ -8,5 +8,8 @@
 }
 
 .zh-word {
-  border: 1px dotted black;
+  background-color: #ddf;
+  margin-right: 4px;
+  border-radius: 4px;
+  padding: 0 2px;
 }
