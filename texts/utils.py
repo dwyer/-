@@ -55,5 +55,5 @@ def _get_sentences(text):
     return fragments
 
 
-def process_text(self):
-    return ''.join(_get_sentences(self.text))
+def process_text(text):
+    return ''.join(_get_sentences(text))
