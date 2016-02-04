@@ -123,9 +123,11 @@
   app.controller('TextDetailCtrl', [
     '$scope', '$http', '$routeParams',
     function ($scope, $http, $routeParams) {
+      $scope.data = {};
       $http.get('/api/v1/texts/' + $routeParams.id)
       .then(function (response) {
         $scope.text = response.data;
+        $scope.data.processedText = $scope.text.processed_text;
         $scope.isWritable = $scope.text.owner.id == USER_ID;
       });
       $scope.phraseListPartialUrl = PARTIALS_DIR + 'phrase_list.html';
@@ -137,17 +139,27 @@
       };
       $scope.listener = function () {
         var oldSelection = $scope.selection;
-        if (window.getSelection) {
-          $scope.selection = window.getSelection().toString();
-        } else {
-          $scope.selection = document.selection.createRange().text;
-        }
+        $scope.selection = window.getSelection().toString();
         if ($scope.selection.length > 0 && $scope.selection !== oldSelection) {
           $http.get('/api/v1/phrases?traditional=' + encodeURIComponent($scope.selection))
           .then(function (response) {
             $scope.phrases = response.data.results;
           });
         }
+      };
+      $scope.editMode = false;
+      $scope.toggleEditMode = function () {
+        $scope.data.processedText = $scope.text.processed_text;
+        $scope.editMode = !$scope.editMode;
+      };
+      $scope.save = function () {
+        $scope.editMode = false;
+        $scope.text.text = $scope.data.processedText;
+        $http.put(API_BASE_URL + 'texts/' + $routeParams.id, $scope.text)
+        .then(function (response) {
+          $scope.text = response.data;
+          $scope.data.processedText = $scope.text.processed_text;
+        });
       };
     }]);
 
