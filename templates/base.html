@@ -14,68 +14,73 @@
   </script>
 </head>
 <body>
-  <div class="navbar navbar-default">
-    <div class="container-fluid">
+  <div id="wrapper">
 
-      <div class="navbar-header">
-        <a class="navbar-brand" href="{% url 'index' %}">Yanjiu</a>
+    <div class="navbar navbar-default navbar-fixed-top">
+      <div class="container-fluid">
+
+        <div class="navbar-header">
+          <a class="navbar-brand" href="{% url 'index' %}">Yanjiu</a>
+        </div>
+
+        <ul class="nav navbar-nav navbar-left">
+          <li><a href="/#/texts">Texts</a></li>
+          <li><a href="/#/texts/create">Create Text</a></li>
+          {% if user.is_authenticated %}
+          <li><a href="{% url 'cedict_search' %}?q=is:starred">Starred</a></li>
+          {% endif %}
+          <li><a href="{% url 'cedict_random' %}">Random</a></li>
+          <li>
+            <!-- search bar -->
+            <form action="{% url 'cedict_search' %}" class="navbar-form">
+              <div class="form-group">
+                <input class="form-control" type="search" name="q" placeholder="Search" value="{{ search_query }}">
+              </div>
+              <input type="submit" value="Search" class="btn btn-default">
+            </form>
+          </li>
+        </ul>
+
+        <ul class="nav navbar-nav navbar-right">
+          {% if user.is_authenticated %}
+          <li><a href="#"><span class="glyphicon glyphicon-user"></span> {{ user }}</a></li>
+          <li><a href="{% url 'logout' %}">Logout</a></li>
+          {% else %}
+          <li>
+            <!-- search bar -->
+            <form action="{% url 'login' %}" method="POST" class="navbar-form">
+              <div class="form-group">
+                <input class="form-control" type="text" name="username" placeholder="Username">
+              </div>
+              <div class="form-group">
+                <input class="form-control" type="password" name="password" placeholder="Password">
+              </div>
+              {% csrf_token %}
+              <input type="submit" value="Login" class="btn btn-default">
+            </form>
+          </li>
+          {% endif %}
+        </ul>
+
       </div>
-
-      <ul class="nav navbar-nav navbar-left">
-        <li><a href="/#/texts">Texts</a></li>
-        <li><a href="/#/texts/create">Create Text</a></li>
-        {% if user.is_authenticated %}
-        <li><a href="{% url 'cedict_search' %}?q=is:starred">Starred</a></li>
-        {% endif %}
-        <li><a href="{% url 'cedict_random' %}">Random</a></li>
-        <li>
-          <!-- search bar -->
-          <form action="{% url 'cedict_search' %}" class="navbar-form">
-            <div class="form-group">
-              <input class="form-control" type="search" name="q" placeholder="Search" value="{{ search_query }}">
-            </div>
-            <input type="submit" value="Search" class="btn btn-default">
-          </form>
-        </li>
-      </ul>
-
-      <ul class="nav navbar-nav navbar-right">
-        {% if user.is_authenticated %}
-        <li><a href="#"><span class="glyphicon glyphicon-user"></span> {{ user }}</a></li>
-        <li><a href="{% url 'logout' %}">Logout</a></li>
-        {% else %}
-        <li>
-          <!-- search bar -->
-          <form action="{% url 'login' %}" method="POST" class="navbar-form">
-            <div class="form-group">
-              <input class="form-control" type="text" name="username" placeholder="Username">
-            </div>
-            <div class="form-group">
-              <input class="form-control" type="password" name="password" placeholder="Password">
-            </div>
-            {% csrf_token %}
-            <input type="submit" value="Login" class="btn btn-default">
-          </form>
-        </li>
-        {% endif %}
-      </ul>
-
     </div>
+    <div class="container-fluid">
+      {% block content %}
+      {% endblock content %}
+    </div>
+    <footer class="footer small">
+      <div class="container-fluid">&copy; 2016 Casey Dwyer</div>
+    </footer>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular-route.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular-sanitize.min.js"></script>
+    <script src="{% static 'audio/js/audio.js' %}"></script>
+    <script src="{% static 'cedict/js/cedict.js' %}"></script>
+    <script src="{% static 'js/app.js' %}"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/angular-strap/2.3.7/angular-strap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/angular-strap/2.3.7/angular-strap.tpl.min.js"></script>
+    {% block end %}
+    {% endblock end %}
   </div>
-  <div class="container">
-    {% block content %}
-    {% endblock content %}
-    <footer class="footer small text-muted">&copy; 2016 Casey Dwyer</footer>
-  </div>
-  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular-route.min.js"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular-sanitize.min.js"></script>
-  <script src="{% static 'audio/js/audio.js' %}"></script>
-  <script src="{% static 'cedict/js/cedict.js' %}"></script>
-  <script src="{% static 'js/app.js' %}"></script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/angular-strap/2.3.7/angular-strap.min.js"></script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/angular-strap/2.3.7/angular-strap.tpl.min.js"></script>
-  {% block end %}
-  {% endblock end %}
 </body>
 </html>
