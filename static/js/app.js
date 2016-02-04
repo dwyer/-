@@ -36,6 +36,18 @@
   }]);
 
 
+  app.filter('embeddedVideoUrl', ['$sce', function ($sce) {
+    var p = /^https?:\/\/www\.youtube\.com\/watch\?v=(\w+)$/;
+    return function (input) {
+      var m = p.exec(input);
+      if (m) {
+        return $sce.trustAsResourceUrl('https://www.youtube.com/embed/' + m[1]);
+      }
+      return null;
+    };
+  }]);
+
+
   /**
    * Wrap Chinese sentences in a span.zh-sent tag.
    * TODO: lookup words.
