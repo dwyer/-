@@ -167,8 +167,7 @@
     app.controller('TextEditCtrl', [
       '$scope', '$http', '$routeParams',
       function ($scope, $http, $routeParams) {
-        var id = $routeParams.id;
-        $http.get(API_BASE_URL + 'texts/' + id)
+        $http.get(API_BASE_URL + 'texts/' + $routeParams.id)
         .then(function (response) {
           $scope.text = response.data;
           if ($scope.text.owner.id != USER_ID) {
@@ -176,11 +175,11 @@
           }
         });
         $scope.finish = function () {
-          window.history.back();
+          window.location.href = '#/texts/' + $routeParams.id;
         };
         $scope.submit = function (isValid) {
           if (isValid) {
-            $http.put(API_BASE_URL + 'texts/' + id, $scope.text)
+            $http.put(API_BASE_URL + 'texts/' + $routeParams.id, $scope.text)
             .then(function (response) {
               $scope.finish();
             }, function (response) {
@@ -196,7 +195,10 @@
       function ($scope, $http, $routeParams) {
         $scope.text = {};
         $scope.finish = function () {
-          window.history.back();
+          if (window.history.length > 1)
+            window.history.back();
+          else
+            window.location.href = '#/';
         };
         $scope.submit = function (isValid) {
           if (isValid) {
