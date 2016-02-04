@@ -36,6 +36,27 @@
   }]);
 
 
+  app.directive('contenteditable', ['$sce', function ($sce) {
+    return {
+      restrict: 'A',
+      require: '?ngModel',
+      link: function (scope, element, attrs, ngModel) {
+        if (!ngModel)
+          return;
+        ngModel.$render = function () {
+          element.html(ngModel.$viewValue || '');
+        };
+        function read() {
+          ngModel.$setViewValue(element.html());
+        }
+        element.bind('blur keyup change', function () {
+          scope.$evalAsync(read);
+        });
+      }
+    };
+  }]);
+
+
   app.filter('embeddedVideoUrl', ['$sce', function ($sce) {
     var p = /^https?:\/\/www\.youtube\.com\/watch\?v=(\w+)$/;
     return function (input) {
