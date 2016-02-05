@@ -13,7 +13,7 @@
         <span class="glyphicon glyphicon-edit"></span>
         <a href="#/texts/{{text.id}}/edit">Edit</a>
       </li>
-      <li>{{text.text.length}} characters</li>
+      <li><span class="glyphicon glyphicon-info-sign"></span> {{text.text.length}} characters</li>
     </ul>
     <hr>
     <div class="zh-text" contenteditable="{{editMode ? 'plaintext-only' : 'false'}}" ng-model="data.processedText" ng-mouseup="listener()"></div>
@@ -30,18 +30,18 @@
 
   <div ng-if="text.video_url|embeddedVideoUrl">
     <h2>Video</h2>
-    <ul class="list-unstyled">
-      <li><a href="{{text.video_url}}" target="_blank">Open in new tab</a></li>
+    <ul class="list-unstyled list-inline">
       <li>
         <a ng-click="showVideo = !showVideo">
-          <span ng-if="!showVideo">Show inline</span>
-          <span ng-if="showVideo">Hide</span>
+          <span ng-if="!showVideo">Show video</span>
+          <span ng-if="showVideo">Hide video</span>
         </a>
-        <div class="embed-responsive embed-responsive-4by3" ng-show="showVideo">
-          <iframe class="embed-responsive-item" src="{{text.video_url|embeddedVideoUrl}}"></iframe>
-        </div>
       </li>
+      <li><a href="{{text.video_url}}" target="_blank">Open in new tab <span class="glyphicon glyphicon-new-window"></span></a></li>
     </ul>
+    <div class="embed-responsive embed-responsive-4by3" ng-if="showVideo">
+      <iframe class="embed-responsive-item" ng-src="{{text.video_url|embeddedVideoUrl}}"></iframe>
+    </div>
   </div>
 
   <div ng-if="selection">
