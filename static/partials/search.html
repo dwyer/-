@@ -1,0 +1,15 @@
+<div class="col-sm-12">
+  <div class="alert" ng-class="{'alert-success': data.count, 'alert-danger': !data.count}" ng-if="data">
+    {{data.count, plural,
+    =0 {No results}
+    =1 {One result}
+    other {Showing {{phrases.length}} of {{data.count}} results}}}
+    <span> for <strong>{{search_query}}</strong></span>
+  </div>
+  <div ng-include="'/static/partials/phrase_list.html'"></div>
+  <div class="text-center">
+    <ul class="pagination">
+      <li><a ng-click="more()" ng-if="data.next">More</a></li>
+    </ul>
+  </div>
+</div>

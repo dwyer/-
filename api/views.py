@@ -20,6 +20,11 @@ class PhraseViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         queryset = self.queryset
         traditional = self.request.query_params.get('traditional')
+        search_query = self.request.query_params.get('q')
+        if search_query is not None:
+            queryset = (queryset.filter(traditional__contains=search_query)
+                        .extra(select={'__len': 'Length(traditional)'})
+                        .order_by('__len'))
         if traditional is not None:
             queryset = queryset.filter(traditional=traditional)
         return queryset

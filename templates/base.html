@@ -30,18 +30,22 @@
           <li><a href="{% url 'cedict_search' %}?q=is:starred">Starred</a></li>
           {% endif %}
           <li><a href="{% url 'cedict_random' %}">Random</a></li>
-          <li>
-            <!-- search bar -->
-            <form action="{% url 'cedict_search' %}" class="navbar-form">
-              <div class="form-group">
-                <input class="form-control" type="search" name="q" placeholder="Search" value="{{ search_query }}">
-              </div>
-              <input type="submit" value="Search" class="btn btn-default">
-            </form>
-          </li>
         </ul>
 
         <ul class="nav navbar-nav navbar-right">
+          <li ng-controller="SearchFormCtrl" ng-submit="search()">
+            <form class="navbar-form">
+              <div class="input-group">
+                <input class="form-control" type="search" placeholder="Search" ng-model="search_query">
+                <div class="input-group-btn">
+                  <button class="btn btn-default" type="submit">
+                    <span class="glyphicon glyphicon-search"></span>
+                    <span class="sr-only">Search</span>
+                  </button>
+                </div>
+              </div>
+            </form>
+          </li>
           {% if user.is_authenticated %}
           <li><a href="#"><span class="glyphicon glyphicon-user"></span> {{ user }}</a></li>
           <li><a href="{% url 'logout' %}">Logout</a></li>
@@ -74,6 +78,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular-route.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular-sanitize.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular-message-format.min.js"></script>
     <script src="{% static 'audio/js/audio.js' %}"></script>
     <script src="{% static 'cedict/js/cedict.js' %}"></script>
     <script src="{% static 'js/app.js' %}"></script>

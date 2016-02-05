@@ -2,6 +2,7 @@
 
 (function () {
   var app = angular.module('yanjiu', [
+    'ngMessageFormat',
     'ngRoute',
     'ngSanitize',
     'mgcrea.ngStrap.affix',
@@ -31,6 +32,10 @@
     .when('/texts/:id/edit', {
       templateUrl: PARTIALS_DIR + 'text_edit.html',
       controller: 'TextEditCtrl'//,
+    })
+    .when('/search/:query', {
+      templateUrl: PARTIALS_DIR + 'search.html',
+      controller: 'SearchCtrl'//,
     })
     .otherwise({redirectTo: '/'});
   }]);
@@ -211,5 +216,33 @@
           }
         };
       }]);
+
+    app.controller('SearchCtrl', [
+      '$scope', '$http', '$routeParams',
+      function ($scope, $http, $routeParams) {
+        $scope.search_query = $routeParams.query;
+        $scope.phrases = {};
+        $scope.more = function () {
+          $http.get($scope.data.next).then(function (response) {
+            $scope.data = response.data;
+            for (var i in response.data.results)
+              $scope.phrases.push(response.data.results[i]);
+          });
+        }
+        $http.get(API_BASE_URL + 'phrases?q=' + $routeParams.query)
+        .then(function (response) {
+          $scope.data = response.data;
+          $scope.phrases = response.data.results;
+        });
+      }]);
+
+    app.controller('SearchFormCtrl', [
+      '$scope', '$http',
+      function ($scope) {
+        $scope.search = function () {
+          window.location.href = '#/search/' + $scope.search_query;
+        }
+      }]);
+
 
 })();

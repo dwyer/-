@@ -1,15 +1,14 @@
-<div class="alert alert-danger" ng-repeat="(key, value) in error">
-  <strong>{{key}}:</strong>
-  <span ng-repeat="message in value"> {{message}}</span>
-</div>
-
-<form name="textForm" novalidate>
-
-  <ng-include src="'/texts/form'"></ng-include>
-
-  <div class="form-group">
-    <button class="btn btn-primary" ng-click="submit(textForm.$valid)" ng-disabled="textForm.$invalid">Submit</button>
-    <button class="btn btn-default" ng-click="finish()">Cancel</button>
+<div class="col-sm-12">
+  <div class="alert alert-danger" ng-repeat="(key, value) in error">
+    <strong>{{key}}:</strong>
+    <span ng-repeat="message in value"> {{message}}</span>
   </div>
 
-</form>
+  <form name="textForm" novalidate>
+    <ng-include src="'/texts/form'"></ng-include>
+    <div class="form-group">
+      <button class="btn btn-primary" ng-click="submit(textForm.$valid)" ng-disabled="textForm.$invalid">Submit</button>
+      <button class="btn btn-default" ng-click="finish()">Cancel</button>
+    </div>
+  </form>
+</div>
