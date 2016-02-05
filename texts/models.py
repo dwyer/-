@@ -4,6 +4,7 @@ import logging as logger
 
 from django.contrib.auth.models import User
 from django.db import models
+from django.utils.html import strip_tags
 
 from .utils import process_text
 
@@ -21,3 +22,7 @@ class Text(models.Model):
         s = process_text(self.text)
         print 'finished processed_text in %gs' % (time.time() - t)
         return s
+
+    def save(self, *args, **kwargs):
+        self.text = strip_tags(self.text)
+        return super(Text, self).save(*args, **kwargs)
