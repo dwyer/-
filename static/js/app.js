@@ -46,6 +46,10 @@
       templateUrl: PARTIALS_DIR + 'search.html',
       controller: 'SearchCtrl'//,
     })
+    .when('/phrases/starred', {
+      templateUrl: PARTIALS_DIR + 'search.html',
+      controller: 'StarredPhrasesCtrl'//,
+    })
     .otherwise({redirectTo: '/'});
   }]);
 
@@ -243,6 +247,26 @@
           $scope.phrases = response.data.results;
         });
       }]);
+
+    app.controller('StarredPhrasesCtrl', [
+      '$scope', '$http',
+      function ($scope, $http) {
+        $scope.playAudio = playAudio;
+        $scope.phrases = {};
+        $scope.more = function () {
+          $http.get($scope.data.next).then(function (response) {
+            $scope.data = response.data;
+            for (var i in response.data.results)
+              $scope.phrases.push(response.data.results[i]);
+          });
+        }
+        $http.get(API_BASE_URL + 'phrases?starred=true')
+        .then(function (response) {
+          $scope.data = response.data;
+          $scope.phrases = response.data.results;
+        });
+      }
+    ]);
 
     app.controller('SearchFormCtrl', ['$scope', function ($scope) {
       $scope.lang = 'zh-tw';

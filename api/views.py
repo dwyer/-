@@ -21,9 +21,12 @@ class PhraseViewSet(viewsets.ModelViewSet):
         queryset = self.queryset
         traditional = self.request.query_params.get('traditional')
         search_query = self.request.query_params.get('q')
+        starred = self.request.query_params.get('starred', 'false') != 'false'
         language = self.request.query_params.get('lang', 'zh-tw')
         if language == 'zh':
             language = 'zh-tw'
+        if starred:
+            queryset = self.request.user.profile.starred_phrases.all()
         if search_query is not None:
             if language == 'zh-tw':
                 queryset = (queryset.filter(traditional__contains=search_query)
