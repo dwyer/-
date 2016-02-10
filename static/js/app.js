@@ -2,14 +2,6 @@
 
 (function () {
 
-
-  function playAudio(phrase) {
-    var url = '/audio/' + phrase + '.mp4';
-    var audio = new Audio(url);
-    audio.play();
-  }
-
-
   var app = angular.module('yanjiu', [
     'ngMessageFormat',
     'ngRoute',
@@ -51,6 +43,17 @@
       controller: 'StarredPhrasesCtrl'//,
     })
     .otherwise({redirectTo: '/'});
+  }]);
+
+
+  app.factory('phraseService', ['$http', function ($http) {
+    return {
+      playAudio: function (phrase) {
+        var url = '/audio/' + phrase + '.mp4';
+        var audio = new Audio(url);
+        audio.play();
+      }
+    };
   }]);
 
 
@@ -139,8 +142,9 @@
 
 
   app.controller('TextDetailCtrl', [
-    '$scope', '$http', '$routeParams',
-    function ($scope, $http, $routeParams) {
+    '$scope', '$http', '$routeParams', 'phraseService',
+    function ($scope, $http, $routeParams, phraseService) {
+      $scope.phraseService = phraseService;
       $scope.data = {};
       $http.get('/api/v1/texts/' + $routeParams.id)
       .then(function (response) {
@@ -150,7 +154,6 @@
       });
       $scope.phraseListPartialUrl = PARTIALS_DIR + 'phrase_list.html';
       $scope.selection = null;
-      $scope.playAudio = playAudio;
       $scope.listener = function () {
         var oldSelection = $scope.selection;
         $scope.selection = window.getSelection().toString();
@@ -227,9 +230,9 @@
       }]);
 
     app.controller('SearchCtrl', [
-      '$scope', '$http', '$routeParams',
-      function ($scope, $http, $routeParams) {
-        $scope.playAudio = playAudio;
+      '$scope', '$http', '$routeParams', 'phraseService',
+      function ($scope, $http, $routeParams, phraseService) {
+        $scope.phraseService = phraseService;
         $scope.search_query = $routeParams.query;
         $scope.phrases = {};
         $scope.more = function () {
@@ -249,9 +252,9 @@
       }]);
 
     app.controller('StarredPhrasesCtrl', [
-      '$scope', '$http',
-      function ($scope, $http) {
-        $scope.playAudio = playAudio;
+      '$scope', '$http', 'phraseService',
+      function ($scope, $http, phraseService) {
+        $scope.phraseService = phraseService;
         $scope.phrases = {};
         $scope.more = function () {
           $http.get($scope.data.next).then(function (response) {

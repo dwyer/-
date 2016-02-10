@@ -7,7 +7,7 @@
       </h4>
       <div>
         /{{phrase.pinyin_unicode}}/
-        <a class="glyphicon glyphicon-volume-up" ng-click="playAudio(phrase.pinyin)"></a>
+        <a class="glyphicon glyphicon-volume-up" ng-click="phraseService.playAudio(phrase.pinyin)"></a>
       </div>
       <div>/{{phrase.zhuyin}}/</div>
       <ul ng-repeat="translation in phrase.translations">
