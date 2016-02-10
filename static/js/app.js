@@ -52,6 +52,19 @@
         var url = '/audio/' + phrase + '.mp4';
         var audio = new Audio(url);
         audio.play();
+      },
+      toggleStar: function (phrase) {
+        var url = API_BASE_URL + 'phrases/' + phrase.id + '/star';
+        if (!phrase.is_starred) {
+          $http.post(url).then(function (response) {
+            //
+          });
+        } else {
+          $http.delete(url).then(function (response) {
+            //
+          });
+        }
+        phrase.is_starred = !phrase.is_starred;
       }
     };
   }]);

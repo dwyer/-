@@ -4,6 +4,9 @@ from django.shortcuts import get_object_or_404
 from django.views.generic import View
 
 from rest_framework import generics, pagination, viewsets
+from rest_framework.decorators import detail_route
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.response import Response
 
 from cedict.models import Phrase, Translation
 from texts.models import Text
@@ -48,6 +51,17 @@ class PhraseViewSet(viewsets.ModelViewSet):
         if traditional is not None:
             queryset = queryset.filter(traditional=traditional)
         return queryset
+
+    @detail_route(url_path='star', methods=['post', 'delete'],
+                  permission_classes=[IsAuthenticatedOrReadOnly])
+    def star(self, request, pk=None):
+        phrase = get_object_or_404(Phrase, pk=pk)
+        print request.method
+        if request.method == 'POST':
+            request.user.profile.starred_phrases.add(phrase)
+        elif request.method == 'DELETE':
+            request.user.profile.starred_phrases.remove(phrase)
+        return Response({'status', 'ok'})
 
 
 class TranslationViewSet(viewsets.ModelViewSet):

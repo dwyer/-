@@ -36,11 +36,18 @@ class TranslationSerializer(_BaseSerializer):
 
 class PhraseSerializer(_BaseSerializer):
     translations = TranslationSerializer(source='translation_set', many=True)
+    is_starred = serializers.SerializerMethodField('_is_starred')
+
+    def _is_starred(self, phrase):
+        request = self.context.get('request')
+        return (request is not None
+                and request.user.is_authenticated()
+                and phrase in request.user.profile.starred_phrases.all())
 
     class Meta:
         model = Phrase
         fields = ('id', 'traditional', 'simplified', 'pinyin',
-                  'pinyin_unicode', 'zhuyin', 'translations')
+                  'pinyin_unicode', 'zhuyin', 'translations', 'is_starred')
 
 
 class TextSerializer(_BaseSerializer):
