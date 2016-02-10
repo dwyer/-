@@ -6,12 +6,18 @@ import sys
 
 _REGEX = re.compile(r'[A-Za-z:]+[1-5]')
 _MAP = {
-    'a': ('\u0101', '\xe1', '\u01ce', '\xe0'),
-    'e': ('\u0113', '\xe9', '\u011b', '\xe8'),
-    'i': ('\u012b', '\xed', '\u01d0', '\xec'),
-    'o': ('\u014d', '\xf3', '\u01d2', '\xf2'),
-    'u': ('\u016b', '\xfa', '\u01d4', '\xf9'),
-    '\xfc': ('\u01d6', '\u01d8', '\u01da', '\u01dc'),
+    'A': ('Ā', 'Á', 'Ǎ', 'À'),
+    'E': ('Ē', 'É', 'Ě', 'È'),
+    'I': ('Ī', 'Í', 'Ǐ', 'Ì'),
+    'O': ('Ō', 'Ó', 'Ǒ', 'Ò'),
+    'U': ('Ū', 'Ú', 'Ǔ', 'Ù'),
+    'Ǜ': ('Ǖ', 'Ǘ', 'Ǚ', 'Ǜ'),
+    'a': ('ā', 'á', 'ǎ', 'à'),
+    'e': ('ē', 'é', 'ě', 'è'),
+    'i': ('ī', 'í', 'ǐ', 'ì'),
+    'o': ('ō', 'ó', 'ǒ', 'ò'),
+    'u': ('ū', 'ú', 'ǔ', 'ù'),
+    'ü': ('ǖ', 'ǘ', 'ǚ', 'ǜ'),
 }
 
 
@@ -33,7 +39,7 @@ def _accent(alpha, tone, index=None):
     for i in xrange(len(alpha)-1, -1, -1):
         if alpha[i] in _MAP:
             return _accent(alpha, tone, i)
-    raise ValueError
+    raise ValueError('_accent(%r, %r, %r)' % (alpha, tone, index))
 
 
 # TODO: cache
