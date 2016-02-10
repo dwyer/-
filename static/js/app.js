@@ -1,6 +1,15 @@
 'use strict';
 
 (function () {
+
+
+  function playAudio(phrase) {
+    var url = '/audio/' + phrase + '.mp4';
+    var audio = new Audio(url);
+    audio.play();
+  }
+
+
   var app = angular.module('yanjiu', [
     'ngMessageFormat',
     'ngRoute',
@@ -33,7 +42,7 @@
       templateUrl: PARTIALS_DIR + 'text_edit.html',
       controller: 'TextEditCtrl'//,
     })
-    .when('/search/:query', {
+    .when('/search/:lang/:query', {
       templateUrl: PARTIALS_DIR + 'search.html',
       controller: 'SearchCtrl'//,
     })
@@ -137,11 +146,7 @@
       });
       $scope.phraseListPartialUrl = PARTIALS_DIR + 'phrase_list.html';
       $scope.selection = null;
-      $scope.playAudio = function (phrase) {
-        var url = '/audio/' + phrase + '.mp4';
-        var audio = new Audio(url);
-        audio.play();
-      };
+      $scope.playAudio = playAudio;
       $scope.listener = function () {
         var oldSelection = $scope.selection;
         $scope.selection = window.getSelection().toString();
@@ -220,6 +225,7 @@
     app.controller('SearchCtrl', [
       '$scope', '$http', '$routeParams',
       function ($scope, $http, $routeParams) {
+        $scope.playAudio = playAudio;
         $scope.search_query = $routeParams.query;
         $scope.phrases = {};
         $scope.more = function () {
@@ -229,20 +235,22 @@
               $scope.phrases.push(response.data.results[i]);
           });
         }
-        $http.get(API_BASE_URL + 'phrases?q=' + $routeParams.query)
+        $http.get(API_BASE_URL + 'phrases?q='
+                  + encodeURIComponent($routeParams.query) + '&lang='
+                  + encodeURIComponent($routeParams.lang))
         .then(function (response) {
           $scope.data = response.data;
           $scope.phrases = response.data.results;
         });
       }]);
 
-    app.controller('SearchFormCtrl', [
-      '$scope', '$http',
-      function ($scope) {
-        $scope.search = function () {
-          window.location.href = '#/search/' + $scope.search_query;
-        }
-      }]);
+    app.controller('SearchFormCtrl', ['$scope', function ($scope) {
+      $scope.lang = 'zh-tw';
+      $scope.search = function () {
+        window.location.href = ('#/search/' + encodeURIComponent($scope.lang)
+                                + '/' + encodeURIComponent($scope.query));
+      };
+    }]);
 
 
 })();

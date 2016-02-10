@@ -21,10 +21,27 @@ class PhraseViewSet(viewsets.ModelViewSet):
         queryset = self.queryset
         traditional = self.request.query_params.get('traditional')
         search_query = self.request.query_params.get('q')
+        language = self.request.query_params.get('lang', 'zh-tw')
+        if language == 'zh':
+            language = 'zh-tw'
         if search_query is not None:
-            queryset = (queryset.filter(traditional__contains=search_query)
-                        .extra(select={'__len': 'Length(traditional)'})
-                        .order_by('__len'))
+            if language == 'zh-tw':
+                queryset = (queryset.filter(traditional__contains=search_query)
+                            .extra(select={'__len': 'Length(traditional)'})
+                            .order_by('__len'))
+            elif language == 'zh-cn':
+                queryset = (queryset.filter(simplified__contains=search_query)
+                            .extra(select={'__len': 'Length(simplified)'})
+                            .order_by('__len'))
+            elif language == 'en':
+                queryset = (
+                    queryset.filter(
+                        translation__translation__icontains=search_query)
+                    .extra(
+                        select={'__len': 'Length(translation)'})
+                    .order_by('__len'))
+            else:
+                queryset = queryset.exclude(pk__gt=0) # exclude all
         if traditional is not None:
             queryset = queryset.filter(traditional=traditional)
         return queryset
