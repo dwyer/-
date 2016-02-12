@@ -1,5 +1,9 @@
+import subprocess
+import tempfile
+
 from django.contrib.auth.models import User
-from django.http import JsonResponse
+from django.core.files.storage import get_storage_class
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404
 from django.views.generic import View
 
@@ -13,6 +17,8 @@ from texts.models import Text
 
 from . import serializers
 from . import permissions
+
+_storage = get_storage_class()()
 
 
 class PhraseViewSet(viewsets.ModelViewSet):
@@ -97,3 +103,17 @@ class PhrasesStar(View):
         phrase = get_object_or_404(Phrase, pk=phrase_id)
         request.user.profile.starred_phrases.remove(phrase)
         return JsonResponse({})
+
+
+def audio_view(request, phrase):
+    phrase = phrase.lower()
+    phrase = phrase.replace('u:', 'v')
+    phrase = ' '.join('er' if comp == 'r' else comp for comp in phrase.split())
+    filename = 'audio_files/%s.mp4' % phrase
+    if not _storage.exists(filename):
+        with tempfile.NamedTemporaryFile(suffix='.mp4') as audio_file:
+            subprocess.call(('say', '--file-format=mp4f', '-o',
+                             audio_file.name, '-v', 'Mei-Jia', phrase))
+            with _storage.open(filename, 'wb') as dest:
+                dest.write(audio_file.read())
+    return HttpResponseRedirect(_storage.url(filename))

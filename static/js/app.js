@@ -49,7 +49,7 @@
   .factory('phraseService', ['$http', function ($http) {
     return {
       playAudio: function (phrase) {
-        var url = '/audio/' + phrase + '.mp4';
+        var url = API_BASE_URL + 'audio/' + phrase + '.mp4';
         var audio = new Audio(url);
         audio.play();
       },
