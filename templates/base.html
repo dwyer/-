@@ -54,8 +54,12 @@
             </form>
           </li>
           {% if user.is_authenticated %}
-          <li><a href="#"><span class="glyphicon glyphicon-user"></span> {{ user }}</a></li>
-          <li><a href="{% url 'logout' %}"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+          <li class="dropdown">
+            <a bs-dropdown="dropdown"><span class="glyphicon glyphicon-user"></span> {{ user }} <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+              <li><a href="{% url 'logout' %}"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+            </ul>
+          </li>
           {% else %}
           <li>
             <!-- search bar -->

@@ -7,6 +7,8 @@
     'ngRoute',
     'ngSanitize',
     'mgcrea.ngStrap.affix',
+    'mgcrea.ngStrap.dropdown',
+    'mgcrea.ngStrap.tooltip',
   ])
 
 
