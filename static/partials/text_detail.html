@@ -33,8 +33,8 @@
     <ul class="list-unstyled list-inline">
       <li>
         <a ng-click="showVideo = !showVideo">
-          <span ng-if="!showVideo">Show video</span>
-          <span ng-if="showVideo">Hide video</span>
+          <span ng-if="!showVideo">Show video <span class="caret"></span></span>
+          <span ng-if="showVideo">Hide video <span class="dropup"><span class="caret"></span></span></span>
         </a>
       </li>
       <li><a href="{{text.video_url}}" target="_blank">Open in new tab <span class="glyphicon glyphicon-new-window"></span></a></li>
