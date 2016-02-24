@@ -40,24 +40,24 @@
       templateUrl: PARTIALS_DIR + 'search.html',
       controller: 'SearchCtrl'//,
     })
-    .when('/phrases/starred', {
+    .when('/terms/starred', {
       templateUrl: PARTIALS_DIR + 'search.html',
-      controller: 'StarredPhrasesCtrl'//,
+      controller: 'StarredTermsCtrl'//,
     })
     .otherwise({redirectTo: '/'});
   }])
 
 
-  .factory('phraseService', ['$http', function ($http) {
+  .factory('termService', ['$http', function ($http) {
     return {
-      playAudio: function (phrase) {
-        var url = API_BASE_URL + 'audio/' + phrase + '.mp4';
+      playAudio: function (text) {
+        var url = API_BASE_URL + 'audio/' + text + '.mp4';
         var audio = new Audio(url);
         audio.play();
       },
-      toggleStar: function (phrase) {
-        var url = API_BASE_URL + 'phrases/' + phrase.id + '/star';
-        if (!phrase.is_starred) {
+      toggleStar: function (term) {
+        var url = API_BASE_URL + 'terms/' + term.id + '/star';
+        if (!term.is_starred) {
           $http.post(url).then(function (response) {
             //
           });
@@ -66,7 +66,7 @@
             //
           });
         }
-        phrase.is_starred = !phrase.is_starred;
+        term.is_starred = !term.is_starred;
       }
     };
   }])
@@ -113,7 +113,7 @@
 
     var cache = {};
 
-    function lookup(phrase) {
+    function lookup(term) {
       if (cache.html) {
 
       }
@@ -157,28 +157,28 @@
 
 
   .controller('TextDetailCtrl', [
-    '$scope', '$http', '$routeParams', 'phraseService',
-    function ($scope, $http, $routeParams, phraseService) {
+    '$scope', '$http', '$routeParams', 'termService',
+    function ($scope, $http, $routeParams, termService) {
       $scope.data = {};
       $scope.editMode = false;
-      $scope.phraseListPartialUrl = PARTIALS_DIR + 'phrase_list.html';
-      $scope.phraseService = phraseService;
+      $scope.termListPartialUrl = PARTIALS_DIR + 'term_list.html';
+      $scope.termService = termService;
       $scope.selection = null;
 
-      $scope.selectPhrase = function (selection) {
+      $scope.selectTerm = function (selection) {
         var oldSelection = $scope.selection;
         $scope.selection = selection;
         if ($scope.selection.length > 0 && $scope.selection !== oldSelection) {
-          $http.get('/api/v1/phrases?traditional='
+          $http.get('/api/v1/terms?traditional='
                     + encodeURIComponent($scope.selection))
           .then(function (response) {
-            $scope.phrases = response.data.results;
+            $scope.terms = response.data.results;
           });
         }
       };
 
       $scope.listener = function () {
-        $scope.selectPhrase(window.getSelection().toString());
+        $scope.selectTerm(window.getSelection().toString());
       };
 
       $scope.toggleEditMode = function () {
@@ -263,49 +263,49 @@
 
 
   .controller('SearchCtrl', [
-    '$scope', '$http', '$routeParams', 'phraseService',
-    function ($scope, $http, $routeParams, phraseService) {
-      $scope.phraseService = phraseService;
-      $scope.phrases = {};
+    '$scope', '$http', '$routeParams', 'termService',
+    function ($scope, $http, $routeParams, termService) {
+      $scope.termService = termService;
+      $scope.terms = {};
       $scope.search_query = $routeParams.query;
 
       $scope.more = function () {
         $http.get($scope.data.next).then(function (response) {
           $scope.data = response.data;
           for (var i in response.data.results)
-            $scope.phrases.push(response.data.results[i]);
+            $scope.terms.push(response.data.results[i]);
         });
       }
 
-      $http.get(API_BASE_URL + 'phrases?q='
+      $http.get(API_BASE_URL + 'terms?q='
                 + encodeURIComponent($routeParams.query) + '&lang='
                 + encodeURIComponent($routeParams.lang))
                 .then(function (response) {
                   $scope.data = response.data;
-                  $scope.phrases = response.data.results;
+                  $scope.terms = response.data.results;
                 });
     }
   ])
 
 
-  .controller('StarredPhrasesCtrl', [
-    '$scope', '$http', 'phraseService',
-    function ($scope, $http, phraseService) {
-      $scope.phraseService = phraseService;
-      $scope.phrases = {};
+  .controller('StarredTermsCtrl', [
+    '$scope', '$http', 'termService',
+    function ($scope, $http, termService) {
+      $scope.termService = termService;
+      $scope.terms = {};
 
       $scope.more = function () {
         $http.get($scope.data.next).then(function (response) {
           $scope.data = response.data;
           for (var i in response.data.results)
-            $scope.phrases.push(response.data.results[i]);
+            $scope.terms.push(response.data.results[i]);
         });
       }
 
-      $http.get(API_BASE_URL + 'phrases?starred=true')
+      $http.get(API_BASE_URL + 'terms?starred=true')
       .then(function (response) {
         $scope.data = response.data;
-        $scope.phrases = response.data.results;
+        $scope.terms = response.data.results;
       });
     }
   ])

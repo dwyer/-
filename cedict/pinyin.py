@@ -43,9 +43,9 @@ def _accent(alpha, tone, index=None):
 
 
 # TODO: cache
-def ascii_to_unicode(phrase):
+def ascii_to_unicode(text):
     components = []
-    for syllable in phrase.split():
+    for syllable in text.split():
         match = _REGEX.match(syllable)
         if match is None:
             components.append(syllable)
@@ -472,9 +472,9 @@ _zhuyin_table = {
 _zhuyin_tones = {'1': '', '2': 'ˊ', '3': 'ˇ', '4': 'ˋ', '5': '˙'}
 
 
-def zhuyin(phrase):
+def zhuyin(text):
     components = []
-    for syllable in phrase.split():
+    for syllable in text.split():
         if syllable == 'r5':
             syllable = 'er5'
         if (syllable[-1] in _zhuyin_tones

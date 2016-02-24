@@ -10,7 +10,6 @@ urlpatterns = [
     url(r'^accounts/', include('django.contrib.auth.urls')),
     url(r'^$', yanjiu.views.index, name='index'),
     url(r'^api/v1/', include('api.urls')),
-    url(r'^cedict/', include('cedict.urls')),
     url(r'^texts/', include('texts.urls')),
 ]
 

@@ -12,7 +12,7 @@ from rest_framework.decorators import detail_route
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 
-from cedict.models import Phrase, Translation
+from cedict.models import Term, Translation
 from texts.models import Text
 
 from . import serializers
@@ -21,9 +21,9 @@ from . import permissions
 _storage = get_storage_class()()
 
 
-class PhraseViewSet(viewsets.ModelViewSet):
-    queryset = Phrase.objects.all()
-    serializer_class = serializers.PhraseSerializer
+class TermViewSet(viewsets.ModelViewSet):
+    queryset = Term.objects.all()
+    serializer_class = serializers.TermSerializer
     permission_classes = (permissions.ReadOnly,)
 
     def get_queryset(self):
@@ -61,12 +61,12 @@ class PhraseViewSet(viewsets.ModelViewSet):
     @detail_route(url_path='star', methods=['post', 'delete'],
                   permission_classes=[IsAuthenticatedOrReadOnly])
     def star(self, request, pk=None):
-        phrase = get_object_or_404(Phrase, pk=pk)
+        term = get_object_or_404(Term, pk=pk)
         print request.method
         if request.method == 'POST':
-            request.user.profile.starred_phrases.add(phrase)
+            request.user.profile.starred_phrases.add(term)
         elif request.method == 'DELETE':
-            request.user.profile.starred_phrases.remove(phrase)
+            request.user.profile.starred_phrases.remove(term)
         return Response({'status', 'ok'})
 
 
@@ -90,30 +90,30 @@ class UserViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsOwnerOrReadOnly,)
 
 
-class PhrasesStar(View):
+class TermStar(View):
 
     # TODO: require login
-    def post(self, request, phrase_id):
-        phrase = get_object_or_404(Phrase, pk=phrase_id)
-        request.user.profile.starred_phrases.add(phrase)
+    def post(self, request, term_id):
+        term = get_object_or_404(Term, pk=term_id)
+        request.user.profile.starred_phrases.add(term)
         return JsonResponse({})
 
     # TODO: require login
-    def delete(self, request, phrase_id):
-        phrase = get_object_or_404(Phrase, pk=phrase_id)
-        request.user.profile.starred_phrases.remove(phrase)
+    def delete(self, request, term_id):
+        term = get_object_or_404(Term, pk=term_id)
+        request.user.profile.starred_phrases.remove(term)
         return JsonResponse({})
 
 
-def audio_view(request, phrase):
-    phrase = phrase.lower()
-    phrase = phrase.replace('u:', 'v')
-    phrase = ' '.join('er' if comp == 'r' else comp for comp in phrase.split())
-    filename = 'audio_files/%s.mp4' % phrase
+def audio_view(request, term):
+    term = term.lower()
+    term = term.replace('u:', 'v')
+    term = ' '.join('er' if comp == 'r' else comp for comp in term.split())
+    filename = 'audio_files/%s.mp4' % term
     if not _storage.exists(filename):
         with tempfile.NamedTemporaryFile(suffix='.mp4') as audio_file:
             subprocess.call(('say', '--file-format=mp4f', '-o',
-                             audio_file.name, '-v', 'Mei-Jia', phrase))
+                             audio_file.name, '-v', 'Mei-Jia', term))
             with _storage.open(filename, 'wb') as dest:
                 dest.write(audio_file.read())
     return HttpResponseRedirect(_storage.url(filename))

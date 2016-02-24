@@ -27,9 +27,9 @@
           <li><a href="/#/texts">Texts</a></li>
           <li><a href="/#/texts/create">Create Text</a></li>
           {% if user.is_authenticated %}
-          <li><a href="/#/phrases/starred">Starred</a></li>
+          <li><a href="/#/terms/starred">Starred</a></li>
           {% endif %}
-          <li><a href="{% url 'cedict_random' %}">Random</a></li>
+          <!-- <li><a href="/#/terms/random">Random</a></li> -->
         </ul>
 
         <ul class="nav navbar-nav navbar-right">

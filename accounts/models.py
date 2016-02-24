@@ -5,12 +5,12 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-from cedict.models import Phrase
+from cedict.models import Term
 
 
 class Profile(models.Model):
     user = models.OneToOneField(User)
-    starred_phrases = models.ManyToManyField(Phrase)
+    starred_phrases = models.ManyToManyField(Term)
 
 
 @receiver(post_save, sender=User, dispatch_uid='user_post_save')

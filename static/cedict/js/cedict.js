@@ -1,6 +1,6 @@
 var googleApiKey = 'AIzaSyABxbqtLTNxu3q9XkVCRCpvDP2F7N_xtww';
 
-function toggleStar(elem, phraseId) {
+function toggleStar(elem, termId) {
   var oldClassName = elem.className;
   var method = null;
   if (elem.className == 'glyphicon glyphicon-star') {
@@ -11,7 +11,7 @@ function toggleStar(elem, phraseId) {
     method = 'post';
   }
   if (method !== null) {
-    fetch('/api/v1/phrases/' + phraseId + '/star', {
+    fetch('/api/v1/terms/' + termId + '/star', {
       method: method,
       credentials: 'include',
       headers: {
@@ -24,8 +24,8 @@ function toggleStar(elem, phraseId) {
   }
 }
 
-function googleTranslate(id, phrase, source, target) {
-  var url = 'https://www.googleapis.com/language/translate/v2' + '?key=' + googleApiKey + '&q=' + phrase + '&source=' + source + '&target=' + target;
+function googleTranslate(id, text, source, target) {
+  var url = 'https://www.googleapis.com/language/translate/v2' + '?key=' + googleApiKey + '&q=' + text + '&source=' + source + '&target=' + target;
   fetch(url).then(function(response) {
     if (response.status !== 200) {
       console.log('Error: Status Code: ', response.status);
@@ -48,7 +48,7 @@ function textSelectListener(event) {
   var selection = document.getSelection();
   var string = selection.toString();
   if (string.length > 0) {
-    fetch('/api/v1/phrases?traditional=' + encodeURIComponent(string)).then(function(response) {
+    fetch('/api/v1/terms?traditional=' + encodeURIComponent(string)).then(function(response) {
       if (response.status == 200) {
         response.json().then(function (data) {
           for (var i in data.results) {

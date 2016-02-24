@@ -5,7 +5,7 @@ from django.db import models
 from . import pinyin
 
 
-class Phrase(models.Model):
+class Term(models.Model):
     traditional = models.CharField(max_length=255, blank=False)
     simplified = models.CharField(max_length=255, blank=False)
     pinyin = models.CharField(max_length=255, blank=False)
@@ -20,5 +20,5 @@ class Phrase(models.Model):
 
 
 class Translation(models.Model):
-    phrase = models.ForeignKey(Phrase, null=False)
+    term = models.ForeignKey(Term, null=False)
     translation = models.TextField(blank=False)

@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 
 from rest_framework import serializers
 
-from cedict.models import Phrase, Translation
+from cedict.models import Term, Translation
 from texts.models import Text
 
 
@@ -34,18 +34,18 @@ class TranslationSerializer(_BaseSerializer):
         fields = ('id', 'translation')
 
 
-class PhraseSerializer(_BaseSerializer):
+class TermSerializer(_BaseSerializer):
     translations = TranslationSerializer(source='translation_set', many=True)
     is_starred = serializers.SerializerMethodField('_is_starred')
 
-    def _is_starred(self, phrase):
+    def _is_starred(self, term):
         request = self.context.get('request')
         return (request is not None
                 and request.user.is_authenticated()
-                and phrase in request.user.profile.starred_phrases.all())
+                and term in request.user.profile.starred_phrases.all())
 
     class Meta:
-        model = Phrase
+        model = Term
         fields = ('id', 'traditional', 'simplified', 'pinyin',
                   'pinyin_unicode', 'zhuyin', 'translations', 'is_starred')
 

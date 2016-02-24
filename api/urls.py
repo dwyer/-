@@ -8,7 +8,7 @@ from . import views
 
 
 router = routers.DefaultRouter(trailing_slash=False)
-router.register(r'phrases', views.PhraseViewSet)
+router.register(r'terms', views.TermViewSet)
 router.register(r'texts', views.TextViewSet)
 router.register(r'translations', views.TranslationViewSet)
 router.register(r'users', views.UserViewSet)

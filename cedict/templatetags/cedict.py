@@ -15,9 +15,9 @@ register = template.Library()
 
 @register.filter(is_safe=True)
 @stringfilter
-def highlight(text, phrase):
-    if phrase:
-        text = mark_safe(text.replace(phrase, '<em>%s</em>' % phrase))
+def highlight(text, term):
+    if term:
+        text = mark_safe(text.replace(term, '<em>%s</em>' % term))
     return text
 
 
@@ -39,7 +39,7 @@ def urlize_chinese(text):
         if phrase.startswith('|'):
             continue
         text = text.replace(phrase, '<a href="%s">%s</a>' % (
-            reverse('cedict_phrase_tw', args=(phrase,)),
+            '#', # TODO make this a valid URL
             phrase,
         ))
     return mark_safe(text)
