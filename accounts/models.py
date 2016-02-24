@@ -10,7 +10,7 @@ from cedict.models import Term
 
 class Profile(models.Model):
     user = models.OneToOneField(User)
-    starred_phrases = models.ManyToManyField(Term)
+    starred_terms = models.ManyToManyField(Term)
 
 
 @receiver(post_save, sender=User, dispatch_uid='user_post_save')

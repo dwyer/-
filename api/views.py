@@ -34,7 +34,7 @@ class TermViewSet(viewsets.ModelViewSet):
         if language == 'zh':
             language = 'zh-tw'
         if starred:
-            queryset = self.request.user.profile.starred_phrases.all()
+            queryset = self.request.user.profile.starred_terms.all()
         if search_query is not None:
             if language == 'zh-tw':
                 queryset = (queryset.filter(traditional__contains=search_query)
@@ -69,9 +69,9 @@ class TermViewSet(viewsets.ModelViewSet):
         term = get_object_or_404(Term, pk=pk)
         print request.method
         if request.method == 'POST':
-            request.user.profile.starred_phrases.add(term)
+            request.user.profile.starred_terms.add(term)
         elif request.method == 'DELETE':
-            request.user.profile.starred_phrases.remove(term)
+            request.user.profile.starred_terms.remove(term)
         return Response({'status', 'ok'})
 
 

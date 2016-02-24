@@ -42,7 +42,7 @@ class TermSerializer(_BaseSerializer):
         request = self.context.get('request')
         return (request is not None
                 and request.user.is_authenticated()
-                and term in request.user.profile.starred_phrases.all())
+                and term in request.user.profile.starred_terms.all())
 
     class Meta:
         model = Term
