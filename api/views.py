@@ -3,11 +3,10 @@ import tempfile
 
 from django.contrib.auth.models import User
 from django.core.files.storage import get_storage_class
-from django.http import HttpResponseRedirect, JsonResponse
+from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
-from django.views.generic import View
 
-from rest_framework import generics, pagination, viewsets
+from rest_framework import viewsets
 from rest_framework.decorators import detail_route
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
@@ -84,25 +83,11 @@ class TextViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
 
+
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = serializers.UserSerializer
     permission_classes = (permissions.IsOwnerOrReadOnly,)
-
-
-class TermStar(View):
-
-    # TODO: require login
-    def post(self, request, term_id):
-        term = get_object_or_404(Term, pk=term_id)
-        request.user.profile.starred_phrases.add(term)
-        return JsonResponse({})
-
-    # TODO: require login
-    def delete(self, request, term_id):
-        term = get_object_or_404(Term, pk=term_id)
-        request.user.profile.starred_phrases.remove(term)
-        return JsonResponse({})
 
 
 def audio_view(request, term):
