@@ -7,7 +7,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 
 from rest_framework import viewsets
-from rest_framework.decorators import detail_route
+from rest_framework.decorators import detail_route, list_route
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 
@@ -56,6 +56,12 @@ class TermViewSet(viewsets.ModelViewSet):
         if traditional is not None:
             queryset = queryset.filter(traditional=traditional)
         return queryset
+
+    @list_route(url_path='random', methods=['get'])
+    def random(self, request):
+        term = Term.objects.order_by('?').first()
+        term = serializers.TermSerializer(term)
+        return Response(term.data)
 
     @detail_route(url_path='star', methods=['post', 'delete'],
                   permission_classes=[IsAuthenticatedOrReadOnly])
