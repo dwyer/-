@@ -1,7 +1,5 @@
 from __future__ import unicode_literals
 
-import logging as logger
-
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils.html import strip_tags
@@ -17,11 +15,7 @@ class Text(models.Model):
 
     @property
     def processed_text(self):
-        import time
-        t = time.time()
-        s = process_text(self.text)
-        print 'finished processed_text in %gs' % (time.time() - t)
-        return s
+        return process_text(self.text)
 
     def save(self, *args, **kwargs):
         self.text = strip_tags(self.text)
