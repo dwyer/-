@@ -48,26 +48,28 @@
   }])
 
 
-  .factory('termService', ['$http', function ($http) {
-    return {
-      playAudio: function (text) {
-        var url = API_BASE_URL + 'audio/' + text + '.mp4';
-        var audio = new Audio(url);
-        audio.play();
-      },
-      toggleStar: function (term) {
-        var url = API_BASE_URL + 'terms/' + term.id + '/star';
-        if (!term.is_starred) {
-          $http.post(url).then(function (response) {
-            //
-          });
-        } else {
-          $http.delete(url).then(function (response) {
-            //
-          });
-        }
-        term.is_starred = !term.is_starred;
+  .run(['$rootScope', '$http', function ($rootScope, $http) {
+    $rootScope.userId = USER_ID;
+    $rootScope.partialsUrl = PARTIALS_DIR;
+
+    $rootScope.playAudio = function (text) {
+      var url = API_BASE_URL + 'audio/' + text + '.mp4';
+      var audio = new Audio(url);
+      audio.play();
+    };
+
+    $rootScope.toggleStar = function (term) {
+      var url = API_BASE_URL + 'terms/' + term.id + '/star';
+      if (!term.is_starred) {
+        $http.post(url).then(function (response) {
+          //
+        });
+      } else {
+        $http.delete(url).then(function (response) {
+          //
+        });
       }
+      term.is_starred = !term.is_starred;
     };
   }])
 
@@ -157,12 +159,10 @@
 
 
   .controller('TextDetailCtrl', [
-    '$scope', '$http', '$routeParams', 'termService',
-    function ($scope, $http, $routeParams, termService) {
+    '$scope', '$http', '$routeParams',
+    function ($scope, $http, $routeParams) {
       $scope.data = {};
       $scope.editMode = false;
-      $scope.termListPartialUrl = PARTIALS_DIR + 'term_list.html';
-      $scope.termService = termService;
       $scope.selection = null;
 
       $scope.selectTerm = function (selection) {
@@ -263,9 +263,8 @@
 
 
   .controller('SearchCtrl', [
-    '$scope', '$http', '$routeParams', 'termService',
-    function ($scope, $http, $routeParams, termService) {
-      $scope.termService = termService;
+    '$scope', '$http', '$routeParams',
+    function ($scope, $http, $routeParams) {
       $scope.terms = {};
       $scope.search_query = $routeParams.query;
 
@@ -288,26 +287,23 @@
   ])
 
 
-  .controller('StarredTermsCtrl', [
-    '$scope', '$http', 'termService',
-    function ($scope, $http, termService) {
-      $scope.termService = termService;
-      $scope.terms = {};
+  .controller('StarredTermsCtrl', ['$scope', '$http', function ($scope, $http) {
+    $scope.terms = {};
 
-      $scope.more = function () {
-        $http.get($scope.data.next).then(function (response) {
-          $scope.data = response.data;
-          for (var i in response.data.results)
-            $scope.terms.push(response.data.results[i]);
-        });
-      }
-
-      $http.get(API_BASE_URL + 'terms?starred=true')
-      .then(function (response) {
+    $scope.more = function () {
+      $http.get($scope.data.next).then(function (response) {
         $scope.data = response.data;
-        $scope.terms = response.data.results;
+        for (var i in response.data.results)
+          $scope.terms.push(response.data.results[i]);
       });
     }
+
+    $http.get(API_BASE_URL + 'terms?starred=true')
+    .then(function (response) {
+      $scope.data = response.data;
+      $scope.terms = response.data.results;
+    });
+  }
   ])
 
 

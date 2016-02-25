@@ -4,11 +4,11 @@
       <h4 class="media-heading">
         {{term.traditional}}
         <span class="text-muted" ng-if="term.traditional != term.simplified">[{{term.simplified}}]</span>
-        <a class="glyphicon" ng-class="{'glyphicon-star': term.is_starred, 'glyphicon-star-empty': !term.is_starred}" ng-click="termService.toggleStar(term)"></a>
+        <a class="glyphicon" ng-class="{'glyphicon-star': term.is_starred, 'glyphicon-star-empty': !term.is_starred}" ng-click="toggleStar(term)"></a>
       </h4>
       <div>
         /{{term.pinyin_unicode}}/
-        <a class="glyphicon glyphicon-volume-up" ng-click="termService.playAudio(term.pinyin)"></a>
+        <a class="glyphicon glyphicon-volume-up" ng-click="playAudio(term.pinyin)"></a>
       </div>
       <div>/{{term.zhuyin}}/</div>
       <ul ng-repeat="translation in term.translations">
