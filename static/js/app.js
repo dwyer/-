@@ -151,7 +151,7 @@
 
 
   .controller('TextListCtrl', ['$scope', '$http', function ($scope, $http) {
-    $http.get('/api/v1/texts?fields=id,title,video_url')
+    $http.get(API_BASE_URL + 'texts?fields=id,title,video_url')
     .then(function (response) {
       $scope.texts = response.data.results;
     });
@@ -169,7 +169,7 @@
         var oldSelection = $scope.selection;
         $scope.selection = selection;
         if ($scope.selection.length > 0 && $scope.selection !== oldSelection) {
-          $http.get('/api/v1/terms?traditional='
+          $http.get(API_BASE_URL + 'terms?traditional='
                     + encodeURIComponent($scope.selection))
           .then(function (response) {
             $scope.terms = response.data.results;
@@ -196,7 +196,7 @@
         });
       };
 
-      $http.get('/api/v1/texts/' + $routeParams.id)
+      $http.get(API_BASE_URL + 'texts/' + $routeParams.id)
       .then(function (response) {
         $scope.text = response.data;
         $scope.data.processedText = $scope.text.processed_text;
