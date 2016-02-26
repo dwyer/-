@@ -39,10 +39,6 @@ body {
   white-space: pre-line;
 }
 
-.zh-sent {
-  /* border-bottom: 1px dotted black; */
-}
-
 .zh-word {
   background-color: #ddf;
   margin-right: 4px;

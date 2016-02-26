@@ -48,9 +48,7 @@ def _get_sentences(text):
         index = text.index(sentence)
         if index:
             fragments.append(text[:index])
-        fragments.append('<span class="zh-sent">')
         fragments.extend(_get_words(sentence))
-        fragments.append('</span>')
         text = text[index + len(sentence):]
     return fragments
 
