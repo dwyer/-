@@ -7,37 +7,10 @@ from django.core.cache import cache
 from cedict.models import Term
 
 _ZH_SENT_REGEX = re.compile(r'[\u4e00-\u9fa5]+')
-_CACHE_PREFIX = 'get_words:term:'
 
 
-def _get_words(sentence):
-    words = []
-    while sentence:
-        done = False
-        key = sentence[0]
-        terms = cache.get(_CACHE_PREFIX + key)
-        if terms is None:
-            terms = (Term.objects
-                     .filter(traditional__startswith=key)
-                     .extra(select={'L': 'Length(traditional)'})
-                     .order_by('-L')
-                     .values('traditional'))
-            cache.set(_CACHE_PREFIX + key, terms)
-        for term in terms:
-            term = term['traditional']
-            if sentence.startswith(term):
-                sentence = sentence[len(term):]
-                done = True
-                words.append('<span class="zh-word">%s</span>' % term)
-                break
-        if done:
-            continue
-        words.append(key)
-        sentence = sentence[1:]
-    return words
-
-
-def _get_sentences(text):
+def process_text(text):
+    key_prefix = 'get_words:term:'
     fragments = []
     while text:
         match = _ZH_SENT_REGEX.search(text)
@@ -48,10 +21,28 @@ def _get_sentences(text):
         index = text.index(sentence)
         if index:
             fragments.append(text[:index])
-        fragments.extend(_get_words(sentence))
-        text = text[index + len(sentence):]
-    return fragments
-
-
-def process_text(text):
-    return ''.join(_get_sentences(text))
+        offset = index + len(sentence)
+        while sentence:
+            done = False
+            first = sentence[0]
+            terms = cache.get(key_prefix + first)
+            if terms is None:
+                terms = (Term.objects
+                         .filter(traditional__startswith=first)
+                         .extra(select={'L': 'Length(traditional)'})
+                         .order_by('-L')
+                         .values('traditional'))
+                cache.set(key_prefix + first, terms)
+            for term in terms:
+                term = term['traditional']
+                if sentence.startswith(term):
+                    sentence = sentence[len(term):]
+                    done = True
+                    fragments.append('<span class="zh-word">%s</span>' % term)
+                    break
+            if done:
+                continue
+            fragments.append(first)
+            sentence = sentence[1:]
+        text = text[offset:]
+    return ''.join(fragments)
