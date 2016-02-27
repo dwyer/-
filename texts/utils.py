@@ -10,17 +10,38 @@ _ZH_SENT_REGEX = re.compile(r'[\u4e00-\u9fa5]+')
 
 
 def process_text(text):
-    key_prefix = 'get_words:term:'
+    terms = {}
+    for term in (text.terms.extra(select={'L': 'Length(traditional)'})
+                 .order_by('-L')):
+        if term.traditional[0] not in terms:
+            terms[term.traditional[0]] = []
+        terms[term.traditional[0]].append(term.traditional)
+    text = text.text
     fragments = []
+    while text:
+        term = None
+        for term in terms.get(text[0], []):
+            if text.startswith(term):
+                break
+        if term is None:
+            fragments.append(text[0])
+            text = text[1:]
+        else:
+            fragments.append('<span class="zh-word">%s</span>' % term)
+            text = text[len(term):]
+    return ''.join(fragments)
+
+
+def get_terms(text):
+    key_prefix = 'get_terms:term:'
+    text = text.text
+    fragments = set()
     while text:
         match = _ZH_SENT_REGEX.search(text)
         if not match:
-            fragments.append(text)
             break
         sentence = match.group(0)
         index = text.index(sentence)
-        if index:
-            fragments.append(text[:index])
         offset = index + len(sentence)
         while sentence:
             done = False
@@ -30,19 +51,16 @@ def process_text(text):
                 terms = (Term.objects
                          .filter(traditional__startswith=first)
                          .extra(select={'L': 'Length(traditional)'})
-                         .order_by('-L')
-                         .values('traditional'))
+                         .order_by('-L'))
                 cache.set(key_prefix + first, terms)
             for term in terms:
-                term = term['traditional']
-                if sentence.startswith(term):
-                    sentence = sentence[len(term):]
+                if sentence.startswith(term.traditional):
+                    sentence = sentence[len(term.traditional):]
                     done = True
-                    fragments.append('<span class="zh-word">%s</span>' % term)
+                    fragments.add(term)
                     break
             if done:
                 continue
-            fragments.append(first)
             sentence = sentence[1:]
         text = text[offset:]
-    return ''.join(fragments)
+    return fragments

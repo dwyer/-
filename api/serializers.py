@@ -3,10 +3,10 @@ from django.contrib.auth.models import User
 from rest_framework import serializers
 
 from cedict.models import Term, Translation
-from texts.models import Text
+from texts.models import Phrase, Text
 
 
-class _BaseSerializer(serializers.HyperlinkedModelSerializer):
+class _BaseSerializer(serializers.ModelSerializer):
 
     def __init__(self, *args, **kwargs):
         super(_BaseSerializer, self).__init__(*args, **kwargs)
@@ -50,10 +50,28 @@ class TermSerializer(_BaseSerializer):
                   'pinyin_unicode', 'zhuyin', 'translations', 'is_starred')
 
 
+class PhraseSerializer(_BaseSerializer):
+
+    class Meta:
+        model = Phrase
+        fields = ('id', 'phrase', 'level')
+
+
 class TextSerializer(_BaseSerializer):
     owner = UserSerializer(read_only=True)
+    phrases = serializers.SerializerMethodField('_phrases')
 
     class Meta:
         model = Text
-        fields = ('id', 'title', 'text', 'video_url', 'owner',
-                  'processed_text')
+        fields = ('id', 'title', 'text', 'video_url', 'owner', 'phrases')
+
+    def _phrases(self, text):
+        request = self.context.get('request')
+        if not request or not request.user.is_authenticated():
+            return []
+        phrases = []
+        for term in text.terms.all():
+            phrase, _ = Phrase.objects.get_or_create(
+                phrase=term.traditional, owner=request.user)
+            phrases.append(phrase)
+        return PhraseSerializer(phrases, many=True, read_only=True).data

@@ -39,9 +39,33 @@ body {
   white-space: pre-line;
 }
 
-.zh-word {
-  background-color: #ddf;
+.zh-phrase {
   margin-right: 4px;
   border-radius: 4px;
   padding: 0 2px;
+}
+
+.zh-phrase-0 {
+  background-color: #ddf;
+}
+
+.zh-phrase-1 {
+  background-color: #f77;
+}
+
+.zh-phrase-2 {
+  background-color: #fb7;
+}
+
+.zh-phrase-3 {
+  background-color: #ffb;
+}
+
+.zh-phrase-4 {
+  background-color: #bfb;
+}
+
+.zh-phrase-5 {
+  border-bottom: 1px dotted gray;
+  border-radius: 0;
 }

@@ -2,6 +2,45 @@
 
 (function () {
 
+  function processText(text) {
+    text.phrases.sort(function (a, b) {
+      return b.phrase.length - a.phrase.length;
+    });
+    var map = {};
+    for (var i in text.phrases) {
+      var phrase = text.phrases[i];
+      var key = phrase.phrase[0];
+      if (map[key] === undefined) {
+        map[key] = [];
+      }
+      map[key].push(i);
+    }
+    var fragments = [];
+    var s = text.text;
+    while (s.length) {
+      var phrase = null;
+      var index = -1;
+      var key = s[0];
+      if (map[key] !== undefined) {
+        for (var j in map[key]) {
+          index = map[key][j];
+          phrase = text.phrases[index];
+          if (phrase.phrase == s.substring(0, phrase.phrase.length)) {
+            break;
+          }
+        }
+      }
+      if (phrase === null) {
+        fragments.push(s[0]);
+        s = s.substring(1);
+      } else {
+        fragments.push('<span class="zh-phrase zh-phrase-' + phrase.level + ' zh-phrase-id-' + phrase.id + '">' + phrase.phrase + '</span>');
+        s = s.substring(phrase.phrase.length);
+      }
+    }
+    return fragments.join('');
+  }
+
   angular.module('yanjiu', [
     'ngMessageFormat',
     'ngRoute',
@@ -74,6 +113,34 @@
   }])
 
 
+  .directive('zhText', ['$compile', function ($compile) {
+    return {
+      restrict: 'A',
+      link: function (scope, element, attrs) {
+        scope.$watch(function (scope) {
+          return scope.$eval(attrs.zhText);
+        }, function (value) {
+          element.html(value);
+          $compile(element.contents())(scope);
+        });
+      }
+    };
+  }])
+
+
+  .directive('zhPhrase', function () {
+    return {
+      restrict: 'A',
+      scope: {zhPhrase: '='},
+      link: function (scope, element, attrs) {
+        element.html(scope.zhPhrase.phrase);
+        element.addClass('zh-phrase');
+        element.addClass('zh-phrase-' + scope.zhPhrase.level);
+      }
+    };
+  })
+
+
   .directive('contenteditable', ['$sce', function ($sce) {
     return {
       restrict: 'A',
@@ -107,45 +174,10 @@
   }])
 
 
-  /**
-   * Wrap Chinese sentences in a span.zh-sent tag.
-   * TODO: lookup words.
-   */
   .filter('processText', ['$sce', function ($sce) {
-
-    var cache = {};
-
-    function lookup(term) {
-      if (cache.html) {
-
-      }
-    }
-
-    function parseSentence(sent) {
-      return [sent];
-    }
-
+    return processText;
     return function (input) {
-      // input = $sanitize(input);
-      var fragments = [];
-      var pattern = /[一-龥]+/;
-      while (input.length) {
-        var match = pattern.exec(input);
-        if (!match) {
-          if (input.length) {
-            fragments.push(input);
-          }
-          break;
-        }
-        if (match.index > 0) {
-          fragments.push(input.substring(0, match.index));
-        }
-        fragments.push('<span class="zh-sent">');
-        fragments.push(match[0]);
-        fragments.push('</span>');
-        input = input.substring(match.index + match[0].length);
-      }
-      return $sce.trustAsHtml(fragments.join(''));
+      return $sce.trustAsHtml(processText(input));
     };
   }])
 
@@ -165,6 +197,14 @@
       $scope.editMode = false;
       $scope.selection = null;
 
+      $scope.changePhraseLevel = function () {
+        var phrase = $scope.selectedPhrase;
+        $http.put(API_BASE_URL + 'phrases/' + phrase.id, phrase)
+        .then(function (response) {
+          console.log(response.data);
+        });
+      };
+
       $scope.selectTerm = function (selection) {
         var oldSelection = $scope.selection;
         $scope.selection = selection;
@@ -174,6 +214,12 @@
           .then(function (response) {
             $scope.terms = response.data.results;
           });
+          for (var i in $scope.text.phrases) {
+            if ($scope.text.phrases[i].phrase == $scope.selection) {
+              $scope.selectedPhrase = $scope.text.phrases[i];
+              break;
+            }
+          }
         }
       };
 
@@ -182,24 +228,24 @@
       };
 
       $scope.toggleEditMode = function () {
-        $scope.data.processedText = $scope.text.processed_text;
+        // $scope.data.processedText = processText($scope.text);
         $scope.editMode = !$scope.editMode;
       };
 
       $scope.save = function () {
         $scope.editMode = false;
-        $scope.text.text = $scope.data.processedText;
+        // $scope.text.text = $scope.data.processedText;
         $http.put(API_BASE_URL + 'texts/' + $routeParams.id, $scope.text)
         .then(function (response) {
           $scope.text = response.data;
-          $scope.data.processedText = $scope.text.processed_text;
+          // $scope.data.processedText = processText($scope.text);
         });
       };
 
       $http.get(API_BASE_URL + 'texts/' + $routeParams.id)
       .then(function (response) {
         $scope.text = response.data;
-        $scope.data.processedText = $scope.text.processed_text;
+        // $scope.data.processedText = processText($scope.text);
         $scope.isWritable = $scope.text.owner.id == USER_ID;
       });
     }

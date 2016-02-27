@@ -12,7 +12,7 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 
 from cedict.models import Term, Translation
-from texts.models import Text
+from texts.models import Phrase, Text
 
 from . import serializers
 from . import permissions
@@ -88,6 +88,13 @@ class TextViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
+
+
+
+class PhraseViewSet(viewsets.ModelViewSet):
+    queryset = Phrase.objects.all()
+    serializer_class = serializers.PhraseSerializer
+    permission_classes = (permissions.IsOwnerOrReadOnly,)
 
 
 class UserViewSet(viewsets.ModelViewSet):

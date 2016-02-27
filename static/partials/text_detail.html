@@ -16,7 +16,7 @@
       <li><span class="glyphicon glyphicon-info-sign"></span> {{text.text.length}} characters</li>
     </ul>
     <hr>
-    <div class="zh-text" contenteditable="{{editMode ? 'plaintext-only' : 'false'}}" ng-model="data.processedText" ng-mouseup="listener()"></div>
+    <div class="zh-text" zh-text="text|processText" ng-mouseup="listener()"></div>
     <div ng-if="isWritable">
       <button class="btn btn-primary" ng-if="editMode" ng-click="save()">Save</button>
       <button class="btn btn-default" ng-click="toggleEditMode()">
@@ -46,6 +46,12 @@
 
   <div ng-if="selection">
     <h2>{{selection}}</h2>
+    <div class="radio" ng-if="selectedPhrase">
+      <label class="radio-inline zh-phrase zh-phrase-{{n}}" ng-repeat="n in [0, 1, 2, 3, 4, 5]">
+        <input type="radio" name="level" value="{{n}}" ng-model="selectedPhrase.level" ng-change="changePhraseLevel()">
+        <span class="" ng-bind="n"></span>
+      </label>
+    </div>
     <ul class="list-unstyled">
       <li><a href="https://translate.google.com/#zh-CN/en/{{selection}}" target="_blank">Google Translate</a></li>
     </ul>
