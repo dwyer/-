@@ -35,6 +35,11 @@
 
 <div class="col-sm-4 right-sidebar">
 
+  <div>
+    <span class="glyphicon glyphicon-edit"></span>
+    <a ng-click="load()">Refresh</a>
+  </div>
+
   <div ng-if="text.video_url|embeddedVideoUrl">
     <h2>Video</h2>
     <ul class="list-unstyled list-inline">

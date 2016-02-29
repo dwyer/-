@@ -251,6 +251,16 @@
       $scope.editMode = false;
       $scope.selection = null;
 
+      $scope.load = function () {
+        $http.get(API_BASE_URL + 'texts/' + $routeParams.id)
+        .then(function (response) {
+          $scope.text = response.data;
+          updateProgressBar();
+          // $scope.data.processedText = processText($scope.text);
+          $scope.isWritable = $scope.text.owner.id == USER_ID;
+        });
+      }
+
       function updateProgressBar() {
         var progress = [0, 0, 0, 0, 0, 0];
         for (var i in $scope.text.phrases) {
@@ -308,13 +318,7 @@
         });
       };
 
-      $http.get(API_BASE_URL + 'texts/' + $routeParams.id)
-      .then(function (response) {
-        $scope.text = response.data;
-        updateProgressBar();
-        // $scope.data.processedText = processText($scope.text);
-        $scope.isWritable = $scope.text.owner.id == USER_ID;
-      });
+      $scope.load();
     }
   ])
 
