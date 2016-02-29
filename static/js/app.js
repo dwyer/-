@@ -2,11 +2,11 @@
 
 (function () {
 
-    function playAudio(text) {
-      var url = API_BASE_URL + 'audio/' + text + '.mp4';
-      var audio = new Audio(url);
-      audio.play();
-    }
+  function playAudio(text) {
+    var url = API_BASE_URL + 'audio/' + text + '.mp4';
+    var audio = new Audio(url);
+    audio.play();
+  }
 
   function processText(text) {
     text.phrases.sort(function (a, b) {
@@ -120,17 +120,17 @@
   }])
 
 
-  .directive('zhGet', ['$compile', function ($compile) {
+  .directive('zhGet', function () {
     return {
       restrict: 'A',
       link: function (scope, element, attrs) {
         element.html(scope.$parent.vars[attrs.zhGet]);
       }
     };
-  }])
+  })
 
 
-  .directive('zhSet', ['$compile', function ($compile) {
+  .directive('zhSet', function () {
     return {
       restrict: 'A',
       link: function (scope, element, attrs) {
@@ -139,7 +139,7 @@
         scope.$parent.vars[attrs.zhSet] = element.html();
       }
     };
-  }])
+  })
 
 
   .directive('zhText', ['$compile', function ($compile) {
