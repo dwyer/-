@@ -120,6 +120,28 @@
   }])
 
 
+  .directive('zhGet', ['$compile', function ($compile) {
+    return {
+      restrict: 'A',
+      link: function (scope, element, attrs) {
+        element.html(scope.$parent.vars[attrs.zhGet]);
+      }
+    };
+  }])
+
+
+  .directive('zhSet', ['$compile', function ($compile) {
+    return {
+      restrict: 'A',
+      link: function (scope, element, attrs) {
+        if (!scope.$parent.vars)
+          scope.$parent.vars = {};
+        scope.$parent.vars[attrs.zhSet] = element.html();
+      }
+    };
+  }])
+
+
   .directive('zhText', ['$compile', function ($compile) {
     return {
       restrict: 'A',
