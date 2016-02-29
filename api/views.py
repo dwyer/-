@@ -1,8 +1,10 @@
+import datetime
 import subprocess
 import tempfile
 
 from django.contrib.auth.models import User
 from django.core.files.storage import get_storage_class
+from django.db.models.query_utils import Q
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 
@@ -95,6 +97,18 @@ class PhraseViewSet(viewsets.ModelViewSet):
     queryset = Phrase.objects.all()
     serializer_class = serializers.PhraseSerializer
     permission_classes = (permissions.IsOwnerOrReadOnly,)
+
+    def get_queryset(self):
+        queryset = self.queryset
+        due = self.request.query_params.get('due', False)
+        if due:
+            now = datetime.datetime.now()
+            queryset = queryset.filter(owner=self.request.user).filter(
+                Q(level=1)
+                |Q(level=2, updated__lt=now-datetime.timedelta(days=1))
+                |Q(level=3, updated__lt=now-datetime.timedelta(days=3))
+                |Q(level=4, updated__lt=now-datetime.timedelta(days=7)))
+        return queryset
 
 
 class UserViewSet(viewsets.ModelViewSet):
