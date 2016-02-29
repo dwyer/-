@@ -23,8 +23,9 @@ class Text(models.Model):
         return process_text(self)
 
     def save(self, *args, **kwargs):
+        ret = super(Text, self).save(*args, **kwargs)
         self.terms.set(get_terms(self))
-        return super(Text, self).save(*args, **kwargs)
+        return ret
 
 
 class Phrase(models.Model):
