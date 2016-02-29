@@ -2,6 +2,12 @@
 
 (function () {
 
+    function playAudio(text) {
+      var url = API_BASE_URL + 'audio/' + text + '.mp4';
+      var audio = new Audio(url);
+      audio.play();
+    }
+
   function processText(text) {
     text.phrases.sort(function (a, b) {
       return b.phrase.length - a.phrase.length;
@@ -34,7 +40,9 @@
         fragments.push(s[0]);
         s = s.substring(1);
       } else {
-        fragments.push('<span class="zh-phrase zh-phrase-' + phrase.level + ' zh-phrase-id-' + phrase.id + '">' + phrase.phrase + '</span>');
+        fragments.push('<span class="zh-phrase zh-phrase-' + phrase.level
+                       + ' zh-phrase-id-' + phrase.id + '">' + phrase.phrase
+                       + '</span>');
         s = s.substring(phrase.phrase.length);
       }
     }
@@ -75,6 +83,10 @@
       templateUrl: PARTIALS_DIR + 'text_edit.html',
       controller: 'TextEditCtrl'//,
     })
+    .when('/flashcards', {
+      templateUrl: PARTIALS_DIR + 'flashcards.html',
+      controller: 'FlashCardsCtrl'//,
+    })
     .when('/search/:lang/:query', {
       templateUrl: PARTIALS_DIR + 'search.html',
       controller: 'SearchCtrl'//,
@@ -90,12 +102,7 @@
   .run(['$rootScope', '$http', function ($rootScope, $http) {
     $rootScope.userId = USER_ID;
     $rootScope.partialsUrl = PARTIALS_DIR;
-
-    $rootScope.playAudio = function (text) {
-      var url = API_BASE_URL + 'audio/' + text + '.mp4';
-      var audio = new Audio(url);
-      audio.play();
-    };
+    $rootScope.playAudio = playAudio;
 
     $rootScope.toggleStar = function (term) {
       var url = API_BASE_URL + 'terms/' + term.id + '/star';
@@ -319,6 +326,41 @@
       };
     }
   ])
+
+
+  .controller('FlashCardsCtrl', [
+    '$scope', '$http',
+    function ($scope, $http) {
+
+      function load(url) {
+        $http.get(url).then(function (response) {
+          $scope.data = response.data;
+          $scope.phrase = $scope.data.results.pop();
+        });
+      }
+
+      $scope.show = function () {
+        playAudio($scope.phrase.phrase);
+        $http.get(API_BASE_URL + 'terms?traditional='
+                  + encodeURIComponent($scope.phrase.phrase))
+        .then(function (response) {
+          $scope.terms = response.data.results;
+        });
+      };
+
+      $scope.setLevel = function (level) {
+        if (level < 1)
+          level = 1;
+        if (level > 4)
+          level = 4;
+        $scope.phrase.level = level;
+        $http.put(API_BASE_URL + 'phrases/' + $scope.phrase.id, $scope.phrase);
+        $scope.phrase = $scope.data.results.pop();
+        $scope.terms = null;
+      };
+
+      load(API_BASE_URL + 'phrases?due=true');
+    }])
 
 
   .controller('SearchCtrl', [

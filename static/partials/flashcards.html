@@ -1,0 +1,17 @@
+<div class="col-sm-8">
+  <div class="text-right">{{data.results.length}} flashcard(s) left to study.</div>
+  <div class="text-center" ng-if="phrase">
+    <div style="font-size: 30pt;">{{phrase.phrase}}</div>
+    <button class="btn btn-primary" ng-if="!terms" ng-click="show()">看</button>
+    <div ng-if="terms">
+      <button class="btn btn-danger" ng-click="setLevel(1)">不好</button>
+      <button class="btn btn-warning" ng-click="setLevel(phrase.level)">好</button>
+      <button class="btn btn-success" ng-click="setLevel(phrase.level+1)">很好</button>
+      <div>號: {{phrase.level}}</div>
+    </div>
+  </div>
+</div>
+
+<div class="col-sm-4">
+  <div ng-include="partialsUrl + 'term_list.html'"></div>
+</div>
