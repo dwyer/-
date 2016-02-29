@@ -101,6 +101,7 @@ class PhraseViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         queryset = self.queryset
         due = self.request.query_params.get('due', False)
+        random = self.request.query_params.get('random', False)
         if due:
             now = datetime.datetime.now()
             queryset = queryset.filter(owner=self.request.user).filter(
@@ -108,6 +109,8 @@ class PhraseViewSet(viewsets.ModelViewSet):
                 |Q(level=2, updated__lt=now-datetime.timedelta(days=1))
                 |Q(level=3, updated__lt=now-datetime.timedelta(days=3))
                 |Q(level=4, updated__lt=now-datetime.timedelta(days=7)))
+        if random:
+            queryset = queryset.order_by('?')
         return queryset
 
     def perform_create(self, serializer):

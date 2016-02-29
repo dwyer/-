@@ -417,7 +417,7 @@
         $scope.terms = null;
       };
 
-      load(API_BASE_URL + 'phrases?due=true');
+      load(API_BASE_URL + 'phrases?due=true&random=true');
     }])
 
 
