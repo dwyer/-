@@ -15,7 +15,7 @@
       </li>
       <li><span class="glyphicon glyphicon-info-sign"></span> {{text.text.length}} characters</li>
       <li><span class="glyphicon glyphicon-info-sign"></span> {{text.phrases.length}} words</li>
-      <li><span class="glyphicon glyphicon-calendar"></span> {{text.updated|date:'medium'}}</li>
+      <li><span class="glyphicon glyphicon-calendar"></span> {{text.updated|date:'medium'}} ({{text.updated|since}} ago)</li>
       <li>
         <div class="progress">
           <div class="progress-bar zh-phrase-{{n}}" style="width: {{progress[n]}}%;" ng-repeat="n in [0, 1, 2, 3, 4, 5]"></div>

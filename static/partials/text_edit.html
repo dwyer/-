@@ -6,7 +6,7 @@
 
   <form name="textForm" novalidate>
     <ng-include src="'/texts/form'"></ng-include>
-    <div ng-if="text.updated">Updated on {{text.updated|date:'medium'}}</div>
+    <div ng-if="text.updated">Updated on {{text.updated|date:'medium'}} ({{text.updated|since}} ago)</div>
     <div class="form-group">
       <button class="btn btn-primary" ng-click="submit(textForm.$valid)" ng-disabled="textForm.$invalid" ng-if="text.id">Save and continue editing</button>
       <button class="btn btn-primary" ng-click="submit(textForm.$valid, true)" ng-disabled="textForm.$invalid">Save</button>

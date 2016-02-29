@@ -211,6 +211,31 @@
   }])
 
 
+  .filter('since', function () {
+    var lst = [
+      {seconds: 60 * 60 * 24, type: 'day'},
+      {seconds: 60 * 60, type: 'hour'},
+      {seconds: 60, type: 'minute'},
+    ];
+    return function (input) {
+      var units = (new Date() - new Date(input)) / 1000;
+      var type = 'second';
+      for (var i in lst) {
+        if (units >= lst[i].seconds) {
+          units /= lst[i].seconds;
+          type = lst[i].type;
+          break;
+        }
+      }
+      units = Math.ceil(units);
+      var string =  units + ' ' + type;
+      if (units != 1)
+        string = string + 's';
+      return string;
+    };
+  })
+
+
   .controller('TextListCtrl', ['$scope', '$http', function ($scope, $http) {
     $http.get(API_BASE_URL + 'texts?fields=id,title,video_url')
     .then(function (response) {
