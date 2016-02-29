@@ -63,7 +63,8 @@ class TextSerializer(_BaseSerializer):
 
     class Meta:
         model = Text
-        fields = ('id', 'title', 'text', 'video_url', 'owner', 'phrases')
+        fields = ('id', 'title', 'text', 'video_url', 'owner', 'phrases',
+                  'updated')
 
     def _phrases(self, text):
         request = self.context.get('request')

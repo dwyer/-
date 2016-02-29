@@ -15,6 +15,7 @@ class Text(models.Model):
     video_url = models.URLField(blank=True)
     owner = models.ForeignKey(User, null=False)
     terms = models.ManyToManyField(Term)
+    updated = models.DateTimeField(auto_now=True)
 
     @property
     def processed_text(self):

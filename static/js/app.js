@@ -280,11 +280,14 @@
         window.location.href = '#/texts/' + $routeParams.id;
       };
 
-      $scope.submit = function (isValid) {
+      $scope.submit = function (isValid, finish) {
         if (isValid) {
           $http.put(API_BASE_URL + 'texts/' + $routeParams.id, $scope.text)
           .then(function (response) {
-            $scope.finish();
+            if (finish)
+              $scope.finish();
+            else
+              $scope.text = response.data;
           }, function (response) {
             $scope.error = response.data;
           });
