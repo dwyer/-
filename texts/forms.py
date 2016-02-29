@@ -10,5 +10,6 @@ class TextForm(forms.BsNgModelForm):
         fields = [
             'title',
             'text',
+            'audio_url',
             'video_url',
         ]

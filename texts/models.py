@@ -12,6 +12,7 @@ from .utils import get_terms, process_text
 class Text(models.Model):
     title = models.CharField(max_length=255, blank=False)
     text = models.TextField(blank=True)
+    audio_url = models.URLField(blank=True)
     video_url = models.URLField(blank=True)
     owner = models.ForeignKey(User, null=False)
     terms = models.ManyToManyField(Term)

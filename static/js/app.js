@@ -191,16 +191,16 @@
   }])
 
 
-  .filter('embeddedVideoUrl', ['$sce', function ($sce) {
+  .filter('embeddedVideoUrl', function () {
     var p = /^https?:\/\/www\.youtube\.com\/watch\?v=(\w+)$/;
     return function (input) {
       var m = p.exec(input);
       if (m) {
-        return $sce.trustAsResourceUrl('https://www.youtube.com/embed/' + m[1]);
+        return 'https://www.youtube.com/embed/' + m[1];
       }
       return null;
     };
-  }])
+  })
 
 
   .filter('processText', ['$sce', function ($sce) {
@@ -236,8 +236,13 @@
   })
 
 
+  .filter('trustAsResourceUrl', ['$sce', function ($sce) {
+    return $sce.trustAsResourceUrl;
+  }])
+
+
   .controller('TextListCtrl', ['$scope', '$http', function ($scope, $http) {
-    $http.get(API_BASE_URL + 'texts?fields=id,title,video_url')
+    $http.get(API_BASE_URL + 'texts?fields=id,title,audio_url,video_url')
     .then(function (response) {
       $scope.texts = response.data.results;
     });

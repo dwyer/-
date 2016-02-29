@@ -2,6 +2,10 @@
   <section ng-if="text">
     <h1>{{text.title}}</h1>
     <ul class="list-unstyled">
+      <li ng-if="text.audio_url">
+        <span class="glyphicon glyphicon-volume-up"></span>
+        <a href="{{text.audio_url}}" target="_blank">Audio</a>
+      </li>
       <li ng-if="text.video_url">
         <span class="glyphicon glyphicon-facetime-video"></span>
         <a href="{{text.video_url}}" target="_blank">Video</a>
@@ -48,9 +52,13 @@
     </li>
   </ul>
 
+  <audio controls ng-if="text.audio_url">
+    <source ng-src="{{text.audio_url|trustAsResourceUrl}}"></source>
+  </audio>
+
   <div ng-if="showVideo">
     <div class="embed-responsive embed-responsive-4by3">
-      <iframe class="embed-responsive-item" ng-src="{{text.video_url|embeddedVideoUrl}}"></iframe>
+      <iframe class="embed-responsive-item" ng-src="{{text.video_url|embeddedVideoUrl|trustAsResourceUrl}}"></iframe>
     </div>
     <div class="text-right">
       <a href="{{text.video_url}}" target="_blank">Open in new tab <span class="glyphicon glyphicon-new-window"></span></a>
