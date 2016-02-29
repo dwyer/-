@@ -2,20 +2,15 @@
   <section ng-if="text">
     <h1>{{text.title}}</h1>
     <ul class="list-unstyled">
-      <li>
-        <span class="glyphicon glyphicon-user"></span>
-        <span>Created by <strong>{{text.owner.username}}</strong></span>
-      </li>
       <li ng-if="text.video_url">
         <span class="glyphicon glyphicon-facetime-video"></span>
-        <a href="{{text.video_url}}" target="_blank">Video</a></li>
-      <li ng-if="isWritable">
-        <span class="glyphicon glyphicon-edit"></span>
-        <a href="#/texts/{{text.id}}/edit">Edit</a>
+        <a href="{{text.video_url}}" target="_blank">Video</a>
       </li>
-      <li><span class="glyphicon glyphicon-info-sign"></span> {{text.text.length}} characters</li>
-      <li><span class="glyphicon glyphicon-info-sign"></span> {{text.phrases.length}} words</li>
-      <li><span class="glyphicon glyphicon-calendar"></span> {{text.updated|date:'medium'}} ({{text.updated|since}} ago)</li>
+      <li>
+        <span class="glyphicon glyphicon-user"></span>
+        <span>Created by <strong>{{text.owner.username}}</strong> on {{text.updated|date:'medium'}} ({{text.updated|since}} ago)</span>
+      </li>
+      <li><span class="glyphicon glyphicon-info-sign"></span> {{text.phrases.length}} terms, {{text.text.length}} characters</li>
       <li>
         <div class="progress">
           <div class="progress-bar zh-phrase-{{n}}" style="width: {{progress[n]}}%;" ng-repeat="n in [0, 1, 2, 3, 4, 5]"></div>
@@ -35,24 +30,30 @@
 
 <div class="col-sm-4 right-sidebar">
 
-  <div>
-    <span class="glyphicon glyphicon-edit"></span>
-    <a ng-click="load()">Refresh</a>
-  </div>
+  <ul class="list-inline list-unstyled">
+    <li ng-if="text.video_url|embeddedVideoUrl">
+      <button class="btn btn-default" ng-click="toggleVideo()">
+        <span class="glyphicon glyphicon-facetime-video"></span>
+      </button>
+    </li>
+    <li>
+      <button class="btn btn-default" ng-click="load()">
+        <span class="glyphicon glyphicon-refresh"></span>
+      </button>
+    </li>
+    <li ng-if="isWritable">
+      <a class="btn btn-default" href="#/texts/{{text.id}}/edit">
+        <span class="glyphicon glyphicon-edit"></span>
+      </a>
+    </li>
+  </ul>
 
-  <div ng-if="text.video_url|embeddedVideoUrl">
-    <h2>Video</h2>
-    <ul class="list-unstyled list-inline">
-      <li>
-        <a ng-click="showVideo = !showVideo">
-          <span ng-if="!showVideo">Show video <span class="caret"></span></span>
-          <span ng-if="showVideo">Hide video <span class="dropup"><span class="caret"></span></span></span>
-        </a>
-      </li>
-      <li><a href="{{text.video_url}}" target="_blank">Open in new tab <span class="glyphicon glyphicon-new-window"></span></a></li>
-    </ul>
-    <div class="embed-responsive embed-responsive-4by3" ng-if="showVideo">
+  <div ng-if="showVideo">
+    <div class="embed-responsive embed-responsive-4by3">
       <iframe class="embed-responsive-item" ng-src="{{text.video_url|embeddedVideoUrl}}"></iframe>
+    </div>
+    <div class="text-right">
+      <a href="{{text.video_url}}" target="_blank">Open in new tab <span class="glyphicon glyphicon-new-window"></span></a>
     </div>
   </div>
 

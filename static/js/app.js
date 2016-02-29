@@ -308,6 +308,10 @@
         $scope.editMode = !$scope.editMode;
       };
 
+      $scope.toggleVideo = function () {
+        $scope.showVideo = !$scope.showVideo;
+      };
+
       $scope.save = function () {
         $scope.editMode = false;
         // $scope.text.text = $scope.data.processedText;
