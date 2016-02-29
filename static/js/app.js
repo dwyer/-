@@ -197,11 +197,23 @@
       $scope.editMode = false;
       $scope.selection = null;
 
+      function updateProgressBar() {
+        var progress = [0, 0, 0, 0, 0, 0];
+        for (var i in $scope.text.phrases) {
+          progress[$scope.text.phrases[i].level] += 1;
+        }
+        for (var i in progress) {
+          progress[i] /= $scope.text.phrases.length;
+          progress[i] *= 100;
+        }
+        $scope.progress = progress;
+      }
+
       $scope.changePhraseLevel = function () {
         var phrase = $scope.selectedPhrase;
         $http.put(API_BASE_URL + 'phrases/' + phrase.id, phrase)
         .then(function (response) {
-          console.log(response.data);
+          updateProgressBar();
         });
       };
 
@@ -245,6 +257,7 @@
       $http.get(API_BASE_URL + 'texts/' + $routeParams.id)
       .then(function (response) {
         $scope.text = response.data;
+        updateProgressBar();
         // $scope.data.processedText = processText($scope.text);
         $scope.isWritable = $scope.text.owner.id == USER_ID;
       });
