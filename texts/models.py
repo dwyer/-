@@ -30,6 +30,7 @@ class Phrase(models.Model):
     phrase = models.CharField(max_length=255, blank=False)
     owner = models.ForeignKey(User, null=False)
     level = models.IntegerField(null=False, default=0)
+    updated = models.DateTimeField(auto_now=True)
 
     class Meta:
         unique_together = ('phrase', 'owner')
