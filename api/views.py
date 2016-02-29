@@ -110,6 +110,9 @@ class PhraseViewSet(viewsets.ModelViewSet):
                 |Q(level=4, updated__lt=now-datetime.timedelta(days=7)))
         return queryset
 
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
