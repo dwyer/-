@@ -25,8 +25,9 @@
 
         <ul class="nav navbar-nav navbar-left">
           <li><a href="#/texts">Texts</a></li>
-          <li><a href="#/texts/create">Create Text</a></li>
           {% if user.is_authenticated %}
+          <li><a href="#/texts/create">Create Text</a></li>
+          <li><a href="#/phrases">Vocab</a></li>
           <li><a href="#/flashcards">Flash Cards</a></li>
           <li><a href="#/terms/starred">Starred</a></li>
           {% endif %}

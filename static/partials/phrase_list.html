@@ -1,0 +1,29 @@
+<div class="col-sm-8">
+  <h1>Vocabulary</h1>
+  <table class="table">
+    <tr ng-repeat="phrase in phrases">
+      <td>{{phrase.phrase}}</td>
+      <td>
+        <button class="btn btn-default" ng-click="playAudio(phrase.phrase)"><span class="glyphicon glyphicon-volume-up"></span></button>
+        <button class="btn btn-default" ng-click="lookup(phrase.phrase)"><span class="glyphicon glyphicon-book"></span></button></td>
+      <td>{{phrase.updated|date:'medium'}}</td>
+      <td class="text-right">
+        <div class="btn-group" data-toggle="buttons">
+          <label class="btn btn-default" ng-class="{active: phrase.level==n}" ng-repeat="n in [0, 1, 2, 3, 4, 5]">
+            <input type="radio" ng-value="n" ng-model="phrase.level" ng-change="edit(phrase)"> {{n}}
+          </label>
+        </div>
+      </td>
+    </tr>
+  </table>
+  <div class="text-center">
+    <ul class="pagination">
+      <li><a ng-if="data.next" ng-click="load(data.next)">More</a></li>
+    </ul>
+  </div>
+</div>
+
+<div class="col-sm-4 right-sidebar">
+  <div>Showing {{phrases.length}} of {{data.count}} results.</div>
+  <div ng-include="partialsUrl + 'term_list.html'">
+</div>

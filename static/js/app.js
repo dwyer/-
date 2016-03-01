@@ -83,6 +83,10 @@
       templateUrl: PARTIALS_DIR + 'text_edit.html',
       controller: 'TextEditCtrl'//,
     })
+    .when('/phrases', {
+      templateUrl: PARTIALS_DIR + 'phrase_list.html',
+      controller: 'PhraseListCtrl'//,
+    })
     .when('/flashcards', {
       templateUrl: PARTIALS_DIR + 'flashcards.html',
       controller: 'FlashCardsCtrl'//,
@@ -387,6 +391,46 @@
           });
         }
       };
+    }
+  ])
+
+
+  .controller('PhraseListCtrl', [
+    '$scope', '$http',
+    function ($scope, $http) {
+
+      $scope.lookup = function (term) {
+        $http.get(API_BASE_URL + 'terms?traditional=' + encodeURIComponent(term))
+        .then(function (response) {
+          $scope.terms = response.data.results;
+        });
+      };
+
+      $scope.edit = function (phrase) {
+        $http.put(API_BASE_URL + 'phrases/' + phrase.id, phrase)
+        .then(function (response) {
+          angular.forEach(Object.keys(response.data), function (key) {
+            if (!key.startsWith('$'))
+              phrase[key] = response.data[key];
+          });
+        });
+      };
+
+      $scope.load = function (url) {
+        $http.get(url).then(function (response) {
+          $scope.data = response.data;
+          if (!$scope.phrases) {
+            $scope.phrases = response.data.results;
+          } else {
+            angular.forEach(response.data.results, function (phrase) {
+              $scope.phrases.push(phrase);
+            });
+          }
+        });
+      };
+
+      $scope.load(API_BASE_URL + 'phrases');
+
     }
   ])
 
