@@ -253,10 +253,18 @@
 
 
   .controller('TextListCtrl', ['$scope', '$http', function ($scope, $http) {
-    $http.get(API_BASE_URL + 'texts?fields=id,title,audio_url,video_url')
-    .then(function (response) {
-      $scope.texts = response.data.results;
-    });
+
+    $scope.load = function (url) {
+      $http.get(url).then(function (response) {
+        if (!url)
+          return;
+        $scope.data = response.data;
+        $scope.texts = response.data.results;
+      });
+    };
+
+    $scope.load(API_BASE_URL + 'texts?fields=id,title,audio_url,video_url,updated&order=title');
+
   }])
 
 

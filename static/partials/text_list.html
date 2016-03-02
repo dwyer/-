@@ -1,13 +1,33 @@
 <div class="col-sm-12">
+
   <ul class="media-list" ng-repeat="text in texts">
     <li class="media-item">
       <div class="media-body">
         <h4 class="media-header">
-          <a href="#/texts/{{ text.id }}">{{ text.title }}</a>
+          <a href="#/texts/{{text.id}}">{{text.title}}</a>
+        </h4>
+        <div>
           <span class="glyphicon glyphicon-volume-up" ng-if="text.audio_url"></span>
           <span class="glyphicon glyphicon-facetime-video" ng-if="text.video_url"></span>
-        </h4>
+          <span class="glyphicon glyphicon-calendar"></span>
+          <span class="text-muted">{{text.updated|date}}</span>
+        </div>
       </div>
+      <hr>
     </li>
   </ul>
+
+  <div class="text-center">
+    <ul class="pagination">
+      <li ng-class="{disabled: !data.previous}">
+        <a ng-if="data.previous" ng-click="load(data.previous)">Previous</a>
+        <a ng-if="!data.previous">Previous</a>
+      </li>
+      <li ng-class="{disabled: !data.next}">
+        <a ng-if="data.next" ng-click="load(data.next)">Next</a>
+        <a ng-if="!data.next">Next</a>
+      </li>
+    </ul>
+  </div>
+
 </div>
