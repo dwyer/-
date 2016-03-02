@@ -231,7 +231,7 @@
           break;
         }
       }
-      units = Math.ceil(units);
+      units = Math.floor(units);
       var string =  units + ' ' + type;
       if (units != 1)
         string = string + 's';
