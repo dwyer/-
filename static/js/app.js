@@ -196,7 +196,7 @@
 
 
   .filter('embeddedVideoUrl', function () {
-    var p = /^https?:\/\/www\.youtube\.com\/watch\?v=(\w+)$/;
+    var p = /^https?:\/\/www\.youtube\.com\/watch\?v=([-_\w]+)$/;
     return function (input) {
       var m = p.exec(input);
       if (m) {
