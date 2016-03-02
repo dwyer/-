@@ -48,7 +48,7 @@
         s = s.substring(1);
       } else {
         fragments.push('<span class="zh-phrase zh-phrase-' + phrase.level
-                       + ' zh-phrase-id-' + phrase.id + '">' + phrase.phrase
+                       + ' zh-phrase-id-' + phrase.phrase + '">' + phrase.phrase
                        + '</span>');
         s = s.substring(phrase.phrase.length);
       }
@@ -297,11 +297,10 @@
         $scope.progress = progress;
       }
 
-      $scope.changePhraseLevel = function () {
-        var phrase = $scope.selectedPhrase;
+      $scope.updatePhrase = function (phrase) {
         var promise = null;
-        if (phrase.id)
-          promise = $http.put(API_BASE_URL + 'phrases/' + phrase.id, phrase);
+        if (phrase.updated)
+          promise = $http.put(API_BASE_URL + 'phrases/' + phrase.phrase, phrase);
         else
           promise = $http.post(API_BASE_URL + 'phrases', phrase);
         promise.then(function (response) {
@@ -319,11 +318,18 @@
           .then(function (response) {
             $scope.terms = response.data.results;
           });
+          $scope.phrase = null;
           for (var i in $scope.text.phrases) {
             if ($scope.text.phrases[i].phrase == $scope.selection) {
-              $scope.selectedPhrase = $scope.text.phrases[i];
+              $scope.phrase = $scope.text.phrases[i];
               break;
             }
+          }
+          if (!$scope.phrase) {
+            $http.get(API_BASE_URL + 'phrases/' + $scope.selection)
+            .then(function (response) {
+              $scope.phrase = response.data;
+            });
           }
         }
       };
@@ -427,7 +433,7 @@
       };
 
       $scope.edit = function (phrase) {
-        $http.put(API_BASE_URL + 'phrases/' + phrase.id, phrase)
+        $http.put(API_BASE_URL + 'phrases/' + phrase.phrase, phrase)
         .then(function (response) {
           objectUpdate(phrase, response.data);
         });
@@ -472,7 +478,7 @@
         if (level > 4)
           level = 4;
         $scope.phrase.level = level;
-        $http.put(API_BASE_URL + 'phrases/' + $scope.phrase.id, $scope.phrase);
+        $http.put(API_BASE_URL + 'phrases/' + $scope.phrase.phrase, $scope.phrase);
         $scope.phrase = $scope.data.results.pop();
         $scope.terms = null;
       };

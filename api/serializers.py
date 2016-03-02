@@ -54,7 +54,7 @@ class PhraseSerializer(_BaseSerializer):
 
     class Meta:
         model = Phrase
-        fields = ('id', 'phrase', 'level', 'updated')
+        fields = ('phrase', 'level', 'updated')
 
 
 class TextSerializer(_BaseSerializer):

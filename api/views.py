@@ -3,6 +3,7 @@ import subprocess
 import tempfile
 
 from django.contrib.auth.models import User
+from django.core.exceptions import FieldError
 from django.core.files.storage import get_storage_class
 from django.db.models.query_utils import Q
 from django.http import HttpResponseRedirect
@@ -22,13 +23,23 @@ from . import permissions
 _storage = get_storage_class()()
 
 
-class TermViewSet(viewsets.ModelViewSet):
+class _BaseModelViewSet(viewsets.ModelViewSet):
+
+    def get_queryset(self):
+        queryset = super(_BaseModelViewSet, self).get_queryset()
+        order = self.request.query_params.get('order')
+        if order:
+            queryset = queryset.order_by(order)
+        return queryset
+
+
+class TermViewSet(_BaseModelViewSet):
     queryset = Term.objects.all()
     serializer_class = serializers.TermSerializer
     permission_classes = (permissions.ReadOnly,)
 
     def get_queryset(self):
-        queryset = self.queryset
+        queryset = super(TermViewSet, self).get_queryset()
         traditional = self.request.query_params.get('traditional')
         search_query = self.request.query_params.get('q')
         starred = self.request.query_params.get('starred', 'false') != 'false'
@@ -77,13 +88,13 @@ class TermViewSet(viewsets.ModelViewSet):
         return Response({'status', 'ok'})
 
 
-class TranslationViewSet(viewsets.ModelViewSet):
+class TranslationViewSet(_BaseModelViewSet):
     queryset = Translation.objects.all()
     serializer_class = serializers.TranslationSerializer
     permission_classes = (permissions.IsOwnerOrReadOnly,)
 
 
-class TextViewSet(viewsets.ModelViewSet):
+class TextViewSet(_BaseModelViewSet):
     queryset = Text.objects.all()
     serializer_class = serializers.TextSerializer
     permission_classes = (permissions.IsOwnerOrReadOnly,)
@@ -93,13 +104,14 @@ class TextViewSet(viewsets.ModelViewSet):
 
 
 
-class PhraseViewSet(viewsets.ModelViewSet):
+class PhraseViewSet(_BaseModelViewSet):
     queryset = Phrase.objects.all()
     serializer_class = serializers.PhraseSerializer
     permission_classes = (permissions.IsOwnerOrReadOnly,)
+    lookup_field = 'phrase'
 
     def get_queryset(self):
-        queryset = self.queryset
+        queryset = super(PhraseViewSet, self).get_queryset()
         due = self.request.query_params.get('due', False)
         random = self.request.query_params.get('random', False)
         if due:
@@ -117,7 +129,7 @@ class PhraseViewSet(viewsets.ModelViewSet):
         serializer.save(owner=self.request.user)
 
 
-class UserViewSet(viewsets.ModelViewSet):
+class UserViewSet(_BaseModelViewSet):
     queryset = User.objects.all()
     serializer_class = serializers.UserSerializer
     permission_classes = (permissions.IsOwnerOrReadOnly,)
