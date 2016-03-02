@@ -421,27 +421,18 @@
       $scope.edit = function (phrase) {
         $http.put(API_BASE_URL + 'phrases/' + phrase.id, phrase)
         .then(function (response) {
-          angular.forEach(Object.keys(response.data), function (key) {
-            if (!key.startsWith('$'))
-              phrase[key] = response.data[key];
-          });
+          objectUpdate(phrase, response.data);
         });
       };
 
       $scope.load = function (url) {
         $http.get(url).then(function (response) {
           $scope.data = response.data;
-          if (!$scope.phrases) {
-            $scope.phrases = response.data.results;
-          } else {
-            angular.forEach(response.data.results, function (phrase) {
-              $scope.phrases.push(phrase);
-            });
-          }
+          $scope.phrases = response.data.results;
         });
       };
 
-      $scope.load(API_BASE_URL + 'phrases');
+      $scope.load(API_BASE_URL + 'phrases?order=-updated');
 
     }
   ])
