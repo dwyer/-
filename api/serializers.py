@@ -72,7 +72,10 @@ class TextSerializer(_BaseSerializer):
             return []
         phrases = []
         for term in text.terms.all():
-            phrase, _ = Phrase.objects.get_or_create(
-                phrase=term.traditional, owner=request.user)
+            try:
+                phrase = Phrase.objects.get(phrase=term.traditional,
+                                            owner=request.user)
+            except Phrase.DoesNotExist:
+                phrase = {'phrase': term.traditional, 'level': 0}
             phrases.append(phrase)
         return PhraseSerializer(phrases, many=True, read_only=True).data

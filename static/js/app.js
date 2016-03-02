@@ -2,6 +2,13 @@
 
 (function () {
 
+  function objectUpdate(a, b) {
+      angular.forEach(Object.keys(b), function (key) {
+        if (!key.startsWith('$'))
+          a[key] = b[key];
+      });
+  };
+
   function playAudio(text) {
     var url = API_BASE_URL + 'audio/' + text + '.mp4';
     var audio = new Audio(url);
@@ -284,8 +291,13 @@
 
       $scope.changePhraseLevel = function () {
         var phrase = $scope.selectedPhrase;
-        $http.put(API_BASE_URL + 'phrases/' + phrase.id, phrase)
-        .then(function (response) {
+        var promise = null;
+        if (phrase.id)
+          promise = $http.put(API_BASE_URL + 'phrases/' + phrase.id, phrase);
+        else
+          promise = $http.post(API_BASE_URL + 'phrases', phrase);
+        promise.then(function (response) {
+          objectUpdate(phrase, response.data);
           updateProgressBar();
         });
       };
