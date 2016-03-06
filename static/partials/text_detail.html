@@ -4,11 +4,11 @@
     <ul class="list-unstyled">
       <li ng-if="text.audio_url">
         <span class="glyphicon glyphicon-volume-up"></span>
-        <a href="{{text.audio_url}}" target="_blank">Audio</a>
+        <a href="{{text.audio_url}}" target="_blank">Audio <span class="glyphicon glyphicon-new-window"></span></a>
       </li>
       <li ng-if="text.video_url">
         <span class="glyphicon glyphicon-facetime-video"></span>
-        <a href="{{text.video_url}}" target="_blank">Video</a>
+        <a href="{{text.video_url}}" target="_blank">Video <span class="glyphicon glyphicon-new-window"></span></a>
       </li>
       <li>
         <span class="glyphicon glyphicon-user"></span>
