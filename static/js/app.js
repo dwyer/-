@@ -247,6 +247,21 @@
   })
 
 
+  .filter('translation', function ($sce) {
+    var pattern = /([一-龥|]+)\[([\w\s\d]+)\]/;
+    return function (input) {
+      var match = pattern.exec(input);
+      if (match) {
+        var term = match[1].split('|')[0];
+        var url = '#/search/zh-tw/' + encodeURIComponent(term);
+        var tag = '<a href="' + url + '">' + term + '</a>';
+        input = input.replace(match[0], tag);
+      }
+      return input;
+    };
+  })
+
+
   .filter('trustAsResourceUrl', ['$sce', function ($sce) {
     return $sce.trustAsResourceUrl;
   }])

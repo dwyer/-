@@ -12,7 +12,7 @@
       </div>
       <div>/{{term.zhuyin}}/</div>
       <ul ng-repeat="translation in term.translations">
-        <li>{{translation.translation}}</li>
+        <li ng-bind-html="translation.translation|translation"></li>
       </ul>
     </div>
   </li>
