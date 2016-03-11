@@ -490,8 +490,8 @@
       $scope.setLevel = function (level) {
         if (level < 1)
           level = 1;
-        if (level > 4)
-          level = 4;
+        if (level > 5)
+          level = 5;
         $scope.phrase.level = level;
         $http.put(API_BASE_URL + 'phrases/' + $scope.phrase.phrase, $scope.phrase);
         $scope.phrase = $scope.data.results.pop();
