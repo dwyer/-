@@ -9,7 +9,7 @@ class TextForm(forms.BsNgModelForm):
         model = Text
         fields = [
             'title',
-            'text',
             'audio_url',
             'video_url',
+            'text',
         ]
