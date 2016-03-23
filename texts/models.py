@@ -4,11 +4,8 @@ import datetime
 
 from django.contrib.auth.models import User
 from django.db import models
-from django.utils.html import strip_tags
 
-from cedict.models import Term
-
-from .utils import get_terms, process_text
+from .utils import get_terms
 
 
 class Text(models.Model):
@@ -18,17 +15,12 @@ class Text(models.Model):
     audio_url = models.URLField(blank=True)
     video_url = models.URLField(blank=True)
     owner = models.ForeignKey(User, null=False)
-    terms = models.ManyToManyField(Term)
+    words = models.TextField(blank=True)
     updated = models.DateTimeField(auto_now=True)
 
-    @property
-    def processed_text(self):
-        return process_text(self)
-
     def save(self, *args, **kwargs):
-        ret = super(Text, self).save(*args, **kwargs)
-        self.terms.set(get_terms(self))
-        return ret
+        self.terms.set(get_terms(self.text))
+        return super(Text, self).save(*args, **kwargs)
 
 
 class Phrase(models.Model):
