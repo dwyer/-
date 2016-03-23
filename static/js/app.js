@@ -222,15 +222,19 @@
   }])
 
 
-  .filter('since', function () {
+  .filter('timedelta', function () {
     var lst = [
       {seconds: 60 * 60 * 24, type: 'day'},
       {seconds: 60 * 60, type: 'hour'},
       {seconds: 60, type: 'minute'},
     ];
     return function (input) {
+      if (!input)
+        return 'never';
       var units = (new Date() - new Date(input)) / 1000;
+      var isPast = units >= 0;
       var type = 'second';
+      units = Math.abs(units);
       for (var i in lst) {
         if (units >= lst[i].seconds) {
           units /= lst[i].seconds;
@@ -242,6 +246,10 @@
       var string =  units + ' ' + type;
       if (units != 1)
         string = string + 's';
+      if (isPast)
+        string = string + ' ago';
+      else
+        string = 'in ' + string;
       return string;
     };
   })
@@ -260,6 +268,18 @@
       return input;
     };
   })
+
+
+  .filter('truncate', ['$sce', function ($sce) {
+    var ellipsis = '...';
+    return function (input, length) {
+      if (!length)
+        length = 100;
+      if (input.length > length)
+        input = input.substring(0, length - ellipsis.length) + ellipsis;
+      return $sce.trustAsHtml(input);
+    };
+  }])
 
 
   .filter('trustAsResourceUrl', ['$sce', function ($sce) {

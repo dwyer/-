@@ -47,14 +47,15 @@ class TermSerializer(_BaseSerializer):
     class Meta:
         model = Term
         fields = ('id', 'traditional', 'simplified', 'pinyin',
-                  'pinyin_unicode', 'zhuyin', 'translations', 'is_starred')
+                  'pinyin_unicode', 'zhuyin', 'frequency', 'translations',
+                  'is_starred')
 
 
 class PhraseSerializer(_BaseSerializer):
 
     class Meta:
         model = Phrase
-        fields = ('phrase', 'level', 'updated')
+        fields = ('phrase', 'translation', 'level', 'due_date', 'updated')
 
 
 class TextSerializer(_BaseSerializer):

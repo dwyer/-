@@ -12,7 +12,7 @@
       </li>
       <li>
         <span class="glyphicon glyphicon-user"></span>
-        <span>Created by <strong>{{text.owner.username}}</strong> on {{text.updated|date:'medium'}} ({{text.updated|since}} ago)</span>
+        <span>Created by <strong>{{text.owner.username}}</strong> on {{text.updated|date:'medium'}} ({{text.updated|timedelta}})</span>
       </li>
       <li><span class="glyphicon glyphicon-info-sign"></span> {{text.phrases.length}} terms, {{text.text.length}} characters</li>
       <li>

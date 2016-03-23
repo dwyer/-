@@ -6,8 +6,11 @@
       <td>{{phrase.phrase}}</td>
       <td>
         <button class="btn btn-default" ng-click="playAudio(phrase.phrase)"><span class="glyphicon glyphicon-volume-up"></span></button>
-        <button class="btn btn-default" ng-click="lookup(phrase.phrase)"><span class="glyphicon glyphicon-book"></span></button></td>
-      <td><time datetime="{{phrase.updated}}" title="{{phrase.updated|date:'medium'}}" data-placement="right" bs-tooltip>{{phrase.updated|since}} ago</time></td>
+        <button class="btn btn-default" ng-click="lookup(phrase.phrase)"><span class="glyphicon glyphicon-book"></span></button>
+      </td>
+      <td>{{phrase.translation|truncate:20}}</td>
+      <td><time datetime="{{phrase.updated}}" title="{{phrase.updated|date:'medium'}}" data-placement="right" bs-tooltip>{{phrase.updated|timedelta}}</time></td>
+      <td><time datetime="{{phrase.due_date}}" title="{{phrase.due_date|date:'medium'}}" data-placement="right" bs-tooltip>{{phrase.due_date|timedelta}}</time></td>
       <td class="text-right">
         <div class="btn-group" data-toggle="buttons">
           <label class="btn btn-default" ng-class="{active: phrase.level==n}" ng-repeat="n in [0, 1, 2, 3, 4, 5]">

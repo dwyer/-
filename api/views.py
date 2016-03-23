@@ -5,7 +5,6 @@ import tempfile
 from django.contrib.auth.models import User
 from django.core.exceptions import FieldError
 from django.core.files.storage import get_storage_class
-from django.db.models.query_utils import Q
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 
@@ -103,7 +102,6 @@ class TextViewSet(_BaseModelViewSet):
         serializer.save(owner=self.request.user)
 
 
-
 class PhraseViewSet(_BaseModelViewSet):
     queryset = Phrase.objects.all()
     serializer_class = serializers.PhraseSerializer
@@ -112,15 +110,11 @@ class PhraseViewSet(_BaseModelViewSet):
 
     def get_queryset(self):
         queryset = super(PhraseViewSet, self).get_queryset()
-        due = self.request.query_params.get('due', False)
+        queryset = queryset.filter(owner=self.request.user)
+        is_due = self.request.query_params.get('due', False)
         random = self.request.query_params.get('random', False)
-        if due:
-            now = datetime.datetime.now()
-            queryset = queryset.filter(owner=self.request.user).filter(
-                Q(level=1)
-                |Q(level=2, updated__lt=now-datetime.timedelta(days=1))
-                |Q(level=3, updated__lt=now-datetime.timedelta(days=3))
-                |Q(level=4, updated__lt=now-datetime.timedelta(days=7)))
+        if is_due:
+            queryset = queryset.filter(due_date__lte=datetime.datetime.now())
         if random:
             queryset = queryset.order_by('?')
         return queryset
