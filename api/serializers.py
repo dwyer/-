@@ -71,11 +71,5 @@ class TextSerializer(_BaseSerializer):
         request = self.context.get('request')
         if not request or not request.user.is_authenticated():
             return []
-        phrases = []
-        for word in text.words.splitlines():
-            try:
-                phrase = Phrase.objects.get(phrase=word, owner=request.user)
-            except Phrase.DoesNotExist:
-                phrase = {'phrase': word, 'level': 0}
-            phrases.append(phrase)
-        return PhraseSerializer(phrases, many=True, read_only=True).data
+        return PhraseSerializer(
+            text.phrases(request.user), many=True, read_only=True).data

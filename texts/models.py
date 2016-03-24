@@ -8,6 +8,24 @@ from django.db import models
 from .utils import get_terms
 
 
+class GetOrInstatiateMixin(models.Model):
+
+    class Meta:
+        abstract = True
+
+    @classmethod
+    def get_or_instantiate(cls, defaults=None, **kwargs):
+        try:
+            obj = cls.objects.get(**kwargs)
+            created = False
+        except cls.DoesNotExist:
+            if defaults is not None:
+                kwargs.update(defaults)
+            obj = cls(**kwargs)
+            created = True
+        return (obj, created)
+
+
 class Text(models.Model):
 
     title = models.CharField(max_length=255, blank=False)
@@ -22,8 +40,15 @@ class Text(models.Model):
         self.terms.set(get_terms(self.text))
         return super(Text, self).save(*args, **kwargs)
 
+    def phrases(self, user):
+        phrases = []
+        for word in self.words.splitlines():
+            phrases.append(
+                Phrase.get_or_instantiate(phrase=word, owner=user)[0])
+        return phrases
 
-class Phrase(models.Model):
+
+class Phrase(GetOrInstatiateMixin, models.Model):
 
     REVIEW_TIMES_BY_LEVEL = {
         1: datetime.timedelta(days=0),
