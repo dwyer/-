@@ -72,16 +72,10 @@ class Phrase(GetOrInstatiateMixin, models.Model):
         self._old_level = self.level
 
     def save(self, *args, **kwargs):
-        self.due_date = self._calculate_due_date()
+        if self.level != self._old_level:
+            delta = self.REVIEW_TIMES_BY_LEVEL.get(self.level)
+            if delta is not None:
+                self.due_date = datetime.datetime.now() + delta
+            else:
+                self.due_date = None
         super(Phrase, self).save(*args, **kwargs)
-
-    def _calculate_due_date(self):
-        if self.level == self._old_level:
-            return self.due_date
-        new_delta = self.REVIEW_TIMES_BY_LEVEL.get(self.level)
-        if new_delta is None:
-            return None
-        old_delta = self.REVIEW_TIMES_BY_LEVEL.get(self._old_level)
-        if self.due_date is not None and old_delta is not None:
-            return self.due_date - old_delta + new_delta
-        return datetime.datetime.now() + new_delta
