@@ -332,18 +332,6 @@
         $scope.progress = progress;
       }
 
-      $scope.updatePhrase = function (phrase) {
-        var promise = null;
-        if (phrase.updated)
-          promise = $http.put(API_BASE_URL + 'phrases/' + phrase.phrase, phrase);
-        else
-          promise = $http.post(API_BASE_URL + 'phrases', phrase);
-        promise.then(function (response) {
-          objectUpdate(phrase, response.data);
-          updateProgressBar();
-        });
-      };
-
       $scope.selectTerm = function (selection) {
         var oldSelection = $scope.selection;
         $scope.selection = selection;
@@ -460,7 +448,9 @@
     '$scope', '$http',
     function ($scope, $http) {
 
-      $scope.lookup = function (term) {
+      $scope.lookup = function (phrase) {
+        var term = phrase.phrase;
+        $scope.phrase = phrase;
         $http.get(API_BASE_URL + 'terms?traditional=' + encodeURIComponent(term))
         .then(function (response) {
           $scope.terms = response.data.results;
@@ -485,6 +475,21 @@
 
     }
   ])
+
+
+  .controller('PhraseDetailCtrl', ['$scope', '$http', function ($scope, $http) {
+      $scope.updatePhrase = function (phrase) {
+        var promise = null;
+        if (phrase.updated)
+          promise = $http.put(API_BASE_URL + 'phrases/' + phrase.phrase, phrase);
+        else
+          promise = $http.post(API_BASE_URL + 'phrases', phrase);
+        promise.then(function (response) {
+          objectUpdate(phrase, response.data);
+          updateProgressBar();
+        });
+      };
+  }])
 
 
   .controller('FlashCardsCtrl', [

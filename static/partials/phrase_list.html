@@ -6,7 +6,7 @@
       <td>{{phrase.phrase}}</td>
       <td>
         <button class="btn btn-default" ng-click="playAudio(phrase.phrase)"><span class="glyphicon glyphicon-volume-up"></span></button>
-        <button class="btn btn-default" ng-click="lookup(phrase.phrase)"><span class="glyphicon glyphicon-book"></span></button>
+        <button class="btn btn-default" ng-click="lookup(phrase)"><span class="glyphicon glyphicon-book"></span></button>
       </td>
       <td>{{phrase.translation|truncate:20}}</td>
       <td><time datetime="{{phrase.updated}}" title="{{phrase.updated|date:'medium'}}" data-placement="right" bs-tooltip>{{phrase.updated|timedelta}}</time></td>
@@ -35,6 +35,7 @@
     </li>
   </ul>
 
+  <div ng-include="partialsUrl + 'phrase_detail.html'"></div>
   <div ng-include="partialsUrl + 'term_list.html'"></div>
 
 </div>

@@ -70,11 +70,9 @@
     <ul class="list-unstyled">
       <li><a href="https://translate.google.com/#zh-CN/en/{{selection}}" target="_blank">Google Translate <span class="glyphicon glyphicon-new-window"></span></a></li>
     </ul>
-    <div class="btn-group" data-toggle="buttons" ng-if="phrase">
-      <label class="btn btn-default" ng-class="{active: phrase.level == n}" ng-repeat="n in [0, 1, 2, 3, 4, 5]">
-        <input type="radio" ng-value="{{n}}" ng-model="phrase.level" ng-change="updatePhrase(phrase)">
-        <span ng-bind="n"></span>
-      </label>
+    <div>
+      <h2>Phrase</h2>
+      <div ng-include="partialsUrl + 'phrase_detail.html'"></div>
     </div>
     <div ng-if="terms && terms.length">
       <h3>Dictionary</h3>

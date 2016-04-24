@@ -1,0 +1,25 @@
+<div ng-controller="PhraseDetailCtrl">
+  <form no-validate ng-submit="updatePhrase(phrase)" ng-if="phrase">
+    <div class="form-group">
+      <label>Phrase</label>
+      <div ng-bind="phrase.phrase"></div>
+    </div>
+    <div class="form-group">
+      <label>Translation</label>
+      <input class="form-control" type="text" ng-model="phrase.translation">
+    </div>
+    <div class="form-group">
+      <label>Romanization</label>
+      <input class="form-control" type="text" ng-model="phrase.romanization">
+    </div>
+    <div class="form-group">
+      <div class="btn-group" data-toggle="buttons" ng-if="phrase">
+        <label class="btn btn-default" ng-class="{active: phrase.level == n}" ng-repeat="n in [0, 1, 2, 3, 4, 5]">
+          <input type="radio" ng-value="{{n}}" ng-model="phrase.level" ng-change="updatePhrase(phrase)">
+          <span ng-bind="n"></span>
+        </label>
+      </div>
+    </div>
+    <div class="form-group"><input class="btn btn-primary" type="submit"></div>
+</form>
+</div>
