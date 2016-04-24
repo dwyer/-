@@ -55,7 +55,8 @@ class PhraseSerializer(_BaseSerializer):
 
     class Meta:
         model = Phrase
-        fields = ('phrase', 'translation', 'level', 'due_date', 'updated')
+        fields = ('phrase', 'translation', 'romanization', 'level', 'due_date',
+                  'updated')
 
 
 class TextSerializer(_BaseSerializer):

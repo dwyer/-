@@ -59,6 +59,7 @@ class Phrase(GetOrInstatiateMixin, models.Model):
 
     phrase = models.CharField(max_length=255, blank=False)
     translation = models.CharField(max_length=255, blank=True)
+    romanization = models.CharField(max_length=255, blank=True)
     level = models.IntegerField(null=False, default=0)
     due_date = models.DateTimeField(null=True)
     updated = models.DateTimeField(auto_now=True)
