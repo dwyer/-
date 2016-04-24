@@ -6,13 +6,12 @@
         <span class="text-muted" ng-if="term.traditional != term.simplified">[{{term.simplified}}]</span>
         <a class="glyphicon" ng-class="{'glyphicon-star': term.is_starred, 'glyphicon-star-empty': !term.is_starred}" ng-click="toggleStar(term)"></a>
       </h4>
-      <div>
-        /{{term.pinyin_unicode}}/
-        <a class="glyphicon glyphicon-volume-up" ng-click="playAudio(term.pinyin)"></a>
-      </div>
-      <div>/{{term.zhuyin}}/</div>
-      <ul ng-repeat="translation in term.translations">
-        <li ng-bind-html="translation.translation|translation"></li>
+      <ul class="list-unstyled">
+        <li>/{{term.pinyin_unicode}}/ <a class="glyphicon glyphicon-volume-up" ng-click="playAudio(term.pinyin)"></a></li>
+        <li>/{{term.zhuyin}}/</li>
+      </ul>
+      <ul>
+        <li ng-repeat="translation in term.translations" ng-bind-html="translation.translation|translation"></li>
       </ul>
     </div>
   </li>

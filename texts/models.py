@@ -37,7 +37,7 @@ class Text(models.Model):
     updated = models.DateTimeField(auto_now=True)
 
     def save(self, *args, **kwargs):
-        self.terms.set(get_terms(self.text))
+        self.words = '\n'.join(get_terms(self.text))
         return super(Text, self).save(*args, **kwargs)
 
     def phrases(self, user):
@@ -55,6 +55,7 @@ class Phrase(GetOrInstatiateMixin, models.Model):
         2: datetime.timedelta(days=1),
         3: datetime.timedelta(days=3),
         4: datetime.timedelta(days=7),
+        5: datetime.timedelta(days=30),
     }
 
     phrase = models.CharField(max_length=255, blank=False)

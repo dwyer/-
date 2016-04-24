@@ -2,11 +2,16 @@
 
 (function () {
 
+  function objectCopy(obj) {
+    return objectUpdate({}, obj);
+  }
+
   function objectUpdate(a, b) {
-      angular.forEach(Object.keys(b), function (key) {
-        if (!key.startsWith('$'))
-          a[key] = b[key];
-      });
+    angular.forEach(Object.keys(b), function (key) {
+      if (!key.startsWith('$'))
+        a[key] = b[key];
+    });
+    return a;
   };
 
   function playAudio(text) {
@@ -352,6 +357,8 @@
             $http.get(API_BASE_URL + 'phrases/' + $scope.selection)
             .then(function (response) {
               $scope.phrase = response.data;
+            }, function (response) {
+              $scope.phrase = {phrase: $scope.selection, level: 0};
             });
           }
         }
@@ -458,6 +465,8 @@
       };
 
       $scope.edit = function (phrase) {
+        phrase = objectCopy(phrase);
+        phrase.update_due_date = true;
         $http.put(API_BASE_URL + 'phrases/' + phrase.phrase, phrase)
         .then(function (response) {
           objectUpdate(phrase, response.data);

@@ -33,7 +33,7 @@ def get_terms(text):
                 if sentence.startswith(term.traditional):
                     sentence = sentence[len(term.traditional):]
                     done = True
-                    fragments.add(term)
+                    fragments.add(term.traditional)
                     break
             if done:
                 continue
