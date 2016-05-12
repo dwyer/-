@@ -219,6 +219,23 @@
   })
 
 
+  .filter('hanzicraft', function () {
+    return function (input) {
+      var lst = [];
+      var pattern = /[一-龥]/;
+      for (var i in input) {
+        if (pattern.exec(input[i])) {
+          var url = 'http://www.hanzicraft.com/character/' + encodeURIComponent(input[i]);
+          lst.push('<a href="' + url + '" target="_blank">' + input[i] + '</a>');
+        } else {
+          lst.push(input[i]);
+        }
+      }
+      return lst.join('');
+    };
+  })
+
+
   .filter('processText', ['$sce', function ($sce) {
     return processText;
     return function (input) {
