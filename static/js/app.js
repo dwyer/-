@@ -513,7 +513,11 @@
       }
 
       $scope.show = function () {
-        playAudio($scope.phrase.phrase);
+        if ($scope.phrase.romanization && $scope.phrase.romanization.length) {
+          playAudio($scope.phrase.romanization);
+        } else {
+          playAudio($scope.phrase.phrase);
+        }
         $http.get(API_BASE_URL + 'terms?traditional='
                   + encodeURIComponent($scope.phrase.phrase))
         .then(function (response) {
