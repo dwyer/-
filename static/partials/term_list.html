@@ -12,6 +12,7 @@
       </ul>
       <ul>
         <li ng-repeat="translation in term.translations" ng-bind-html="translation.translation|translation"></li>
+        <li ng-if="term.frequency">Frequency: {{term.frequency}}</li>
       </ul>
     </div>
   </li>
