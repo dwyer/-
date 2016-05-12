@@ -74,10 +74,9 @@ class Phrase(GetOrInstatiateMixin, models.Model):
         self._old_level = self.level
 
     def save(self, *args, **kwargs):
-        if self.level != self._old_level:
-            delta = self.REVIEW_TIMES_BY_LEVEL.get(self.level)
-            if delta is not None:
-                self.due_date = datetime.datetime.now() + delta
-            else:
-                self.due_date = None
+        delta = self.REVIEW_TIMES_BY_LEVEL.get(self.level)
+        if delta is not None:
+            self.due_date = datetime.datetime.now() + delta
+        else:
+            self.due_date = None
         super(Phrase, self).save(*args, **kwargs)
