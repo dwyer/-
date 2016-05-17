@@ -55,7 +55,7 @@ class Phrase(GetOrInstatiateMixin, models.Model):
         2: datetime.timedelta(days=1),
         3: datetime.timedelta(days=3),
         4: datetime.timedelta(days=7),
-        5: datetime.timedelta(days=30),
+        5: datetime.timedelta(days=14),
     }
 
     phrase = models.CharField(max_length=255, blank=False)
