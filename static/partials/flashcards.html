@@ -5,15 +5,13 @@
     <button class="btn btn-primary" ng-if="!terms" ng-click="show()">看</button>
     <div ng-if="terms">
       <button class="btn btn-danger" ng-click="setLevel(1)">不好</button>
-      <button class="btn btn-warning" ng-click="setLevel(phrase.level)">好</button>
+      <button class="btn btn-warning" ng-click="setLevel(phrase.level)">還好</button>
       <button class="btn btn-success" ng-click="setLevel(phrase.level+1)">很好</button>
-      <div>號: {{phrase.level}}</div>
-      <div>Translation: {{phrase.translation}}</div>
-      <div>Romanization: {{phrase.romanization}}</div>
     </div>
   </div>
 </div>
 
 <div class="col-sm-4">
+  <div ng-if="terms" ng-include="partialsUrl + 'phrase_detail.html'"></div>
   <div ng-include="partialsUrl + 'term_list.html'"></div>
 </div>
