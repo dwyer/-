@@ -385,23 +385,8 @@
         $scope.selectTerm(window.getSelection().toString());
       };
 
-      $scope.toggleEditMode = function () {
-        // $scope.data.processedText = processText($scope.text);
-        $scope.editMode = !$scope.editMode;
-      };
-
       $scope.toggleVideo = function () {
         $scope.showVideo = !$scope.showVideo;
-      };
-
-      $scope.save = function () {
-        $scope.editMode = false;
-        // $scope.text.text = $scope.data.processedText;
-        $http.put(API_BASE_URL + 'texts/' + $routeParams.id, $scope.text)
-        .then(function (response) {
-          $scope.text = response.data;
-          // $scope.data.processedText = processText($scope.text);
-        });
       };
 
       $scope.load();
