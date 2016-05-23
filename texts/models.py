@@ -1,9 +1,11 @@
 from __future__ import unicode_literals
 
 import datetime
+import random
 
 from django.contrib.auth.models import User
 from django.db import models
+from django.utils import timezone
 
 from .utils import get_terms
 
@@ -51,11 +53,11 @@ class Text(models.Model):
 class Phrase(GetOrInstatiateMixin, models.Model):
 
     REVIEW_TIMES_BY_LEVEL = {
-        1: datetime.timedelta(days=0),
-        2: datetime.timedelta(days=1),
-        3: datetime.timedelta(days=3),
-        4: datetime.timedelta(days=7),
-        5: datetime.timedelta(days=14),
+        1: 0,
+        2: 1,
+        3: 3,
+        4: 7,
+        5: 15,
     }
 
     phrase = models.CharField(max_length=255, blank=False)
@@ -74,9 +76,13 @@ class Phrase(GetOrInstatiateMixin, models.Model):
         self._old_level = self.level
 
     def save(self, *args, **kwargs):
-        delta = self.REVIEW_TIMES_BY_LEVEL.get(self.level)
-        if delta is not None:
-            self.due_date = datetime.datetime.now() + delta
-        else:
-            self.due_date = None
+        if True:
+            days = self.REVIEW_TIMES_BY_LEVEL.get(self.level)
+            if days is not None:
+                rand = 1 - 0.2 * random.random()
+                delta = timezone.timedelta(days=days*rand)
+                print self.level, days, delta
+                self.due_date = timezone.now() + delta
+            else:
+                self.due_date = None
         super(Phrase, self).save(*args, **kwargs)
