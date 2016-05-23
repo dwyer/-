@@ -1,11 +1,13 @@
 import datetime
+import random
 import subprocess
 import tempfile
 
 from django.contrib.auth.models import User
 from django.core.exceptions import FieldError
 from django.core.files.storage import get_storage_class
-from django.http import HttpResponseRedirect
+from django.db.models import Q
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404
 
 from rest_framework import viewsets
@@ -141,3 +143,45 @@ def audio_view(request, term):
             with _storage.open(filename, 'wb') as dest:
                 dest.write(audio_file.read())
     return HttpResponseRedirect(_storage.url(filename))
+
+
+def flash_view(request):
+    answer = Phrase.objects.exclude(Q(translation='')&Q(romanization='')).order_by('?').first()
+    phrase = serializers.PhraseSerializer(answer).data
+
+    # choose the fields
+    fields = ['phrase', 'romanization', 'translation']
+    fields = [field for field in fields if getattr(answer, field)]
+    random.shuffle(fields)
+    question_field = fields.pop()
+    answer_field = fields.pop()
+
+    answer_phrase = answer.phrase
+    question = getattr(answer, question_field)
+    answer = getattr(answer, answer_field)
+
+    choices = Phrase.objects.order_by('?')
+    choices = choices.exclude(**{answer_field: ''})
+    choices = choices.exclude(**{question_field: ''})
+    choices = choices.exclude(**{answer_field: answer})
+    choices = choices.exclude(**{question_field: question})
+
+    if 'translation' not in [answer_field, question_field]:
+        choices = choices.extra(where=['length(phrase) = %d' % len(answer_phrase)])
+    choices = choices[:2 if answer_field == 'romanization' else 5]
+    choices = list(choices)
+    choices = [getattr(choice, answer_field) for choice in choices]
+    choices.append(answer)
+
+    random.shuffle(choices)
+
+    obj = {
+        'question': question,
+        'answer': answer,
+        'choices': choices,
+        'question_field': question_field,
+        'answer_field': answer_field,
+        'phrase': phrase,
+    }
+
+    return JsonResponse(obj, safe=False, json_dumps_params={'indent': 2})
