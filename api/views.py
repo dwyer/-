@@ -40,6 +40,7 @@ class TermViewSet(_BaseModelViewSet):
     permission_classes = (permissions.ReadOnly,)
 
     def get_queryset(self):
+        order_by = []
         queryset = super(TermViewSet, self).get_queryset()
         traditional = self.request.query_params.get('traditional')
         search_query = self.request.query_params.get('q')
@@ -52,24 +53,25 @@ class TermViewSet(_BaseModelViewSet):
         if search_query is not None:
             if language == 'zh-tw':
                 queryset = (queryset.filter(traditional__contains=search_query)
-                            .extra(select={'__len': 'Length(traditional)'})
-                            .order_by('__len'))
+                            .extra(select={'__len': 'Length(traditional)'}))
+                order_by.append('__len')
             elif language == 'zh-cn':
                 queryset = (queryset.filter(simplified__contains=search_query)
-                            .extra(select={'__len': 'Length(simplified)'})
-                            .order_by('__len'))
+                            .extra(select={'__len': 'Length(simplified)'}))
+                order_by.append('__len')
             elif language == 'en':
                 queryset = (
                     queryset.filter(
                         translation__translation__icontains=search_query)
                     .extra(
-                        select={'__len': 'Length(translation)'})
-                    .order_by('__len'))
+                        select={'__len': 'Length(translation)'}))
+                order_by.append('__len')
             else:
                 queryset = queryset.exclude(pk__gt=0) # exclude all
         if traditional is not None:
             queryset = queryset.filter(traditional=traditional)
-        return queryset
+        order_by.append('-frequency')
+        return queryset.order_by(*order_by)
 
     @list_route(url_path='random', methods=['get'])
     def random(self, request):
