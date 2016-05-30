@@ -86,3 +86,12 @@ class Phrase(GetOrInstatiateMixin, models.Model):
             else:
                 self.due_date = None
         super(Phrase, self).save(*args, **kwargs)
+
+
+class PhraseTag(models.Model):
+
+    name = models.CharField(max_length=255, blank=False, unique=True)
+    phrases = models.ManyToManyField(Phrase)
+
+    def __str__(self):
+        return self.name
