@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from rest_framework import serializers
 
 from cedict.models import Term, Translation
-from texts.models import Phrase, Text
+from texts.models import Phrase, PhraseTag, Text
 
 
 class _BaseSerializer(serializers.ModelSerializer):
@@ -51,12 +51,29 @@ class TermSerializer(_BaseSerializer):
                   'is_starred')
 
 
+
+class PhraseTagSerializer(_BaseSerializer):
+
+    class Meta:
+        model = PhraseTag
+        fields = (
+            'name',
+        )
+
+
 class PhraseSerializer(_BaseSerializer):
 
     class Meta:
         model = Phrase
         fields = ('phrase', 'translation', 'romanization', 'level', 'due_date',
-                  'updated')
+                  'updated',
+                  # 'tags',
+                  )
+
+    # tags = serializers.SerializerMethodField('_tags')
+
+    def _tags(self, phrase):
+        return [tag.name for tag in phrase.phrasetag_set.all()]
 
 
 class TextSerializer(_BaseSerializer):
