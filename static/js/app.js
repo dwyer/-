@@ -510,7 +510,8 @@
       function load(url) {
         $http.get(url).then(function (response) {
           $scope.data = response.data;
-          $scope.phrase = $scope.data.results.pop();
+          $scope.phrase = response.data.results[0];
+          $scope.count = response.data.count;
         });
       }
 
@@ -533,13 +534,17 @@
         if (level > 5)
           level = 5;
         $scope.phrase.level = level;
-        $http.put(API_BASE_URL + 'phrases/' + $scope.phrase.phrase, $scope.phrase);
-        $scope.phrase = $scope.data.results.pop();
+        $http
+        .put(API_BASE_URL + 'phrases/' + $scope.phrase.phrase, $scope.phrase)
+        .then(function () {
+          load(API_BASE_URL + 'phrases?due=true&random=true');
+        });
         $scope.terms = null;
       };
 
       load(API_BASE_URL + 'phrases?due=true&random=true');
-    }])
+    }
+  ])
 
 
   .controller('SearchCtrl', [
