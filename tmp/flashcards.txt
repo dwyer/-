@@ -1,0 +1,8 @@
+show original -> guess sound
+
+show original -> choose translation (6)
+show translation -> choose hanzi (6)
+show translation -> choose sound (3)
+show translation -> spell hanzi
+play sound -> choose translation (6)
+play sound -> spell hanzi
