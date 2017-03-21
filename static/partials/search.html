@@ -1,4 +1,4 @@
-<div class="col-sm-12">
+<div ng-class="{'col-sm-8': phrase, 'col-sm-12': !phrase}">
   <div class="alert" ng-class="{'alert-success': data.count, 'alert-danger': !data.count}" ng-if="data">
     {{data.count, plural,
     =0 {No results}
@@ -12,4 +12,7 @@
       <li><a ng-click="more()" ng-if="data.next">More</a></li>
     </ul>
   </div>
+</div>
+<div class="col-sm-4" ng-if="phrase">
+  <div ng-include="partialsUrl + 'phrase_detail.html'"></div>
 </div>

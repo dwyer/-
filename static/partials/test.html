@@ -1,0 +1,59 @@
+<div class="col-sm-8 text-center">
+
+  <h1>
+    <button
+      class="btn btn-default glyphicon glyphicon-volume-up"
+      ng-if="data.question_field === 'romanization'"
+      ng-click="playAudio(data.question)"
+      ></button>
+    <div
+      ng-if="data.question_field !== 'romanization'"
+      ng-bind="data.question"
+      ></div>
+  </h1>
+
+  <div ng-if="data.answer_field === 'romanization'">
+    <div class="btn-group" data-toggle="buttons">
+      <label
+        ng-repeat="choice in data.choices"
+        ng-class="{active: choice === active,
+        'btn-success': choice === data.answer && chosen,
+        'btn-danger': choice !== data.answer && choice === chosen}"
+        class="btn btn-default glyphicon glyphicon-volume-up"
+        >
+        <input type="radio" ng-click="activate(choice)" ng-disabled="chosen">
+      </label>
+    </div>
+  </div>
+
+  <div ng-if="data.answer_field !== 'romanization'" class="row">
+    <div
+        ng-repeat="choice in data.choices"
+        class="col-md-6"
+      >
+      <button
+        class="btn btn-default btn-block"
+        ng-class="{'btn-lg': data.answer_field === 'phrase',
+        'btn-success': choice === data.answer && chosen,
+        'btn-danger': choice !== data.answer && choice === chosen}"
+        ng-disabled="chosen"
+        ng-click="choose(choice)"
+        ng-bind="choice"
+        ></button>
+    </div>
+  </div>
+
+  <div>
+    <button
+      class="btn btn-primary"
+      ng-click="next()"
+      ng-disabled="!chosen"
+      >下一個</button>
+  </div>
+
+</div>
+
+<div class="col-sm-4">
+  <div ng-include="partialsUrl + 'phrase_detail.html'"></div>
+  <div ng-include="partialsUrl + 'term_list.html'"></div>
+</div>

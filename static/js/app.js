@@ -103,6 +103,10 @@
       templateUrl: PARTIALS_DIR + 'flashcards.html',
       controller: 'FlashCardsCtrl'//,
     })
+    .when('/test', {
+      templateUrl: PARTIALS_DIR + 'test.html',
+      controller: 'TestCtrl'//,
+    })
     .when('/search/:lang/:query', {
       templateUrl: PARTIALS_DIR + 'search.html',
       controller: 'SearchCtrl'//,
@@ -547,6 +551,45 @@
   ])
 
 
+  .controller('TestCtrl', ['$scope', '$http', function ($scope, $http) {
+
+    $scope.next = function () {
+      $http.get(API_BASE_URL + 'flash/').then(function (response) {
+        $scope.active = null;
+        $scope.chosen = null;
+        $scope.phrase = null;
+        $scope.term = null;
+        $scope.data = response.data;
+        if ($scope.data.question_field === 'romanization') {
+          playAudio($scope.data.question);
+        }
+      });
+    };
+
+    $scope.activate = function (choice) {
+      if ($scope.active === choice) {
+        $scope.choose(choice);
+      } else {
+        $scope.active = choice;
+        playAudio($scope.active);
+      }
+    };
+
+    $scope.choose = function (chosen) {
+      $scope.chosen = chosen;
+      $scope.phrase = $scope.data.phrase;
+      playAudio($scope.phrase.romanization);
+      if ($scope.chosen === $scope.data.answer) {
+        // TODO: keep score
+        // $scope.next();
+      }
+    };
+
+    $scope.next();
+
+  }])
+
+
   .controller('SearchCtrl', [
     '$scope', '$http', '$routeParams',
     function ($scope, $http, $routeParams) {
@@ -558,6 +601,18 @@
           $scope.data = response.data;
           for (var i in response.data.results)
             $scope.terms.push(response.data.results[i]);
+        });
+      }
+
+      $scope.loadPhrase = function (phrase) {
+        $http.get(API_BASE_URL + 'phrases/' + encodeURIComponent(phrase))
+        .then(function (response) {
+          $scope.phrase = response.data;
+        }, function () {
+          $scope.phrase = {
+            phrase: phrase,
+            level: 0
+          };
         });
       }
 

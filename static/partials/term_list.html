@@ -5,6 +5,7 @@
         {{term.traditional}}
         <span class="text-muted" ng-if="term.traditional != term.simplified">[{{term.simplified}}]</span>
         <a class="glyphicon" ng-class="{'glyphicon-star': term.is_starred, 'glyphicon-star-empty': !term.is_starred}" ng-click="toggleStar(term)"></a>
+        <a class="glyphicon glyphicon-book" ng-if="search_query" ng-click="loadPhrase(term.traditional)"></a>
       </h4>
       <ul class="list-unstyled">
         <li>/{{term.pinyin_unicode}}/ <a class="glyphicon glyphicon-volume-up" ng-click="playAudio(term.pinyin)"></a></li>
